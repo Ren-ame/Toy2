@@ -31,11 +31,6 @@ public class PlayerInputReader : MonoBehaviour
         _controls.Gameplay.Heal.performed += _ => OnHealPressed?.Invoke();
     }
 
-    private void Update() // 입력 확인용 임시 Update 확인 후 삭제
-    {
-        Debug.Log(MoveInput);
-    }
-
     private void OnEnable()
     {
         _controls.Gameplay.Enable();
