@@ -36,15 +36,15 @@ public class PlayerLocomotion : MonoBehaviour
         }
         else
         {
-            _verticalVelocity += _gravity * Time.deltaTime;
+            _verticalVelocity += _gravity * deltaTime;
         }
 
         Vector3 horizontalVelocity = moveDirection * _moveSpeed;
         Vector3 verticalVelocity = Vector3.up * _verticalVelocity;
-        _controller.Move((horizontalVelocity + verticalVelocity) * Time.deltaTime);
+        _controller.Move((horizontalVelocity + verticalVelocity) * deltaTime);
     }
 
-    private Vector3 GetCameraRelativeDirection(Vector2 input)
+    public Vector3 GetCameraRelativeDirection(Vector2 input)
     {
         Vector3 cameraForward = _cameraTransform.forward;
         cameraForward.y = 0f;
