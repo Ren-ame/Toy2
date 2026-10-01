@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerMoveState : PlayerState
+public class PlayerMoveState : PlayerGroundedState
 {
     public PlayerMoveState(PlayerStateMachine machine) : base(machine)
     {

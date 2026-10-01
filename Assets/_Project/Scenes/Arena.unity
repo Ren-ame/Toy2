@@ -704,6 +704,7 @@ GameObject:
   - component: {fileID: 799241905}
   - component: {fileID: 799241906}
   - component: {fileID: 799241907}
+  - component: {fileID: 799241908}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -870,6 +871,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d93c9fd42f54d5745a0a57418d38e0a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStateMachine
+--- !u!114 &799241908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 799241898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30ac66130f3c2da468778441f470bca0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StaminaComponent
+  _maxStamina: 100
+  _regenPerSecond: 35
+  _regenDelay: 1
 --- !u!1 &807070444
 GameObject:
   m_ObjectHideFlags: 0

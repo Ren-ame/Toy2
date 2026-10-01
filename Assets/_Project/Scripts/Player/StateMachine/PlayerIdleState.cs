@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerIdleState : PlayerState
+public class PlayerIdleState : PlayerGroundedState
 {
     public PlayerIdleState(PlayerStateMachine machine) : base(machine) 
     {
@@ -20,4 +20,5 @@ public class PlayerIdleState : PlayerState
 
         Machine.Locomotion.Move(Vector2.zero, deltaTime);
     }
+
 }

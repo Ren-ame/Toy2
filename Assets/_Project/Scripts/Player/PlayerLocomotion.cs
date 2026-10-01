@@ -49,6 +49,11 @@ public class PlayerLocomotion : MonoBehaviour
             RotateTowards(moveDirection);
         }
 
+        MoveInDirection(moveDirection, _moveSpeed, deltaTime);
+    }
+
+    public void MoveInDirection(Vector3 direction, float speed, float deltaTime)
+    {
         if (_controller.isGrounded && _verticalVelocity < 0)
         {
             _verticalVelocity = -2f;
@@ -58,7 +63,7 @@ public class PlayerLocomotion : MonoBehaviour
             _verticalVelocity += _gravity * deltaTime;
         }
 
-        Vector3 horizontalVelocity = moveDirection * _moveSpeed;
+        Vector3 horizontalVelocity = direction * speed;
         Vector3 verticalVelocity = Vector3.up * _verticalVelocity;
         _controller.Move((horizontalVelocity + verticalVelocity) * deltaTime);
     }

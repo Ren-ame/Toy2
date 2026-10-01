@@ -9,6 +9,7 @@ public class PlayerStateMachine : MonoBehaviour
     public PlayerLocomotion Locomotion { get; private set; }
     public StaminaComponent Stamina { get; private set; }
     public LockOnController LockOn { get; private set; }
+    public bool IsInvulnerable { get; set; }
 
     private void Awake()
     {
