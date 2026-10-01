@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(PlayerInputReader), typeof(PlayerLocomotion))]
 public class PlayerStateMachine : MonoBehaviour
 {
     private PlayerState _currentState;
@@ -15,6 +16,11 @@ public class PlayerStateMachine : MonoBehaviour
         Locomotion = GetComponent<PlayerLocomotion>();
         Stamina = GetComponent<StaminaComponent>();
         LockOn = GetComponent<LockOnController>();
+    }
+
+    private void Start()
+    {
+        ChangeState(new PlayerIdleState(this));
     }
 
     public void ChangeState(PlayerState newState)

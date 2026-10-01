@@ -703,6 +703,7 @@ GameObject:
   - component: {fileID: 799241903}
   - component: {fileID: 799241905}
   - component: {fileID: 799241906}
+  - component: {fileID: 799241907}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -857,6 +858,18 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   _lockOnCamera: {fileID: 2068869227}
+--- !u!114 &799241907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 799241898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d93c9fd42f54d5745a0a57418d38e0a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerStateMachine
 --- !u!1 &807070444
 GameObject:
   m_ObjectHideFlags: 0
