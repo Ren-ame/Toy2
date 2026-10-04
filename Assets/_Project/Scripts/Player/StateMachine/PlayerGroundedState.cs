@@ -9,11 +9,13 @@ public abstract class PlayerGroundedState : PlayerState
     public override void Enter()
     {
         Machine.Input.OnDodgePressed += HandleDodge;
+        Machine.Input.OnAttackPressed += HandleAttack;
     }
 
     public override void Exit()
     {
         Machine.Input.OnDodgePressed -= HandleDodge;
+        Machine.Input.OnAttackPressed -= HandleAttack;
     }
 
     private void HandleDodge()
@@ -22,5 +24,10 @@ public abstract class PlayerGroundedState : PlayerState
         {
             Machine.ChangeState(new PlayerDodgeState(Machine));
         }
+    }
+
+    private void HandleAttack()
+    {
+        Machine.ChangeState(new PlayerAttackState(Machine));
     }
 }
