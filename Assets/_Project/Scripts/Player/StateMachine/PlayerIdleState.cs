@@ -18,7 +18,7 @@ public class PlayerIdleState : PlayerGroundedState
             return;
         }
 
-        Machine.Locomotion.Move(Vector2.zero, deltaTime);
+        Machine.Locomotion.StayInPlace(deltaTime);
     }
 
 }

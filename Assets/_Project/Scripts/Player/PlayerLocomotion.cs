@@ -34,10 +34,30 @@ public class PlayerLocomotion : MonoBehaviour
         return Vector3.ClampMagnitude(dir, 1f);
     }
 
+    private void UpdateVerticalVelocity(float deltaTime)
+    {
+        if (_controller.isGrounded && _verticalVelocity < 0)
+        {
+            _verticalVelocity = -2f;
+        }
+        else
+        {
+            _verticalVelocity += _gravity * deltaTime;
+        }
+    }
+
     private void RotateTowards(Vector3 direction)
     {
         Quaternion targetRotation = Quaternion.LookRotation(direction);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, _rotationSpeed * Time.deltaTime);
+    }
+
+    public void MoveInDirection(Vector3 direction, float speed, float deltaTime)
+    {
+        UpdateVerticalVelocity(deltaTime);
+        Vector3 horizontalVelocity = direction * speed;
+        Vector3 verticalVelocity = Vector3.up * _verticalVelocity;
+        _controller.Move((horizontalVelocity + verticalVelocity) * deltaTime);
     }
 
     public void Move(Vector2 input, float deltaTime)
@@ -52,19 +72,8 @@ public class PlayerLocomotion : MonoBehaviour
         MoveInDirection(moveDirection, _moveSpeed, deltaTime);
     }
 
-    public void MoveInDirection(Vector3 direction, float speed, float deltaTime)
+    public void StayInPlace(float deltaTime)
     {
-        if (_controller.isGrounded && _verticalVelocity < 0)
-        {
-            _verticalVelocity = -2f;
-        }
-        else
-        {
-            _verticalVelocity += _gravity * deltaTime;
-        }
-
-        Vector3 horizontalVelocity = direction * speed;
-        Vector3 verticalVelocity = Vector3.up * _verticalVelocity;
-        _controller.Move((horizontalVelocity + verticalVelocity) * deltaTime);
+        MoveInDirection(Vector3.zero, 0f, deltaTime);
     }
 }
