@@ -9,7 +9,11 @@ public class PlayerAttackState : PlayerState
     private const float CombFinish = 0.6f;
     private const float UseStamina = 0.2f;
     private const float HitboxOn = 0.25f;
+    private const float HitboxOff = 0.5f;
     private const float InputBuffer = 0.3f;
+
+    private enum HitboxState { Waiting, Active, Finished }
+    private HitboxState _hitboxState;
 
     private bool ComboBuffer;
     private int ComboCount;
@@ -23,9 +27,9 @@ public class PlayerAttackState : PlayerState
         ComboCount = 0;
         _elapsed = 0f;
         ComboBuffer = false;
+        _hitboxState = HitboxState.Waiting;
 
         Machine.Input.OnAttackPressed += Input_OnAttackPressed;
-        Debug.Log("Attack On");
     }
 
     public override void Tick(float deltaTime)
@@ -42,14 +46,21 @@ public class PlayerAttackState : PlayerState
 
         }
 
-        if (_elapsed >= HitboxOn)
+        if (_elapsed >= HitboxOn && _hitboxState == HitboxState.Waiting)
         {
-
+            Debug.Log("Hitbox On");
+            _hitboxState = HitboxState.Active;
         }
 
         if (_elapsed >= InputBuffer)
         {
             
+        }
+
+        if (_elapsed >= HitboxOff && _hitboxState == HitboxState.Active)
+        {
+            Debug.Log("Hitbox Off");
+            _hitboxState = HitboxState.Finished;
         }
 
         if (_elapsed >= CombFinish)
@@ -69,6 +80,5 @@ public class PlayerAttackState : PlayerState
     public override void Exit()
     {
         Machine.Input.OnAttackPressed -= Input_OnAttackPressed;
-        Debug.Log("Attack Off");
     }
 }
