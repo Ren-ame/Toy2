@@ -30,7 +30,7 @@ public class PlayerAttackState : PlayerState
         _comboBuffer = false;
         _hitboxState = HitboxState.Waiting;
 
-        Machine.Input.OnAttackPressed += Input_OnAttackPressed;
+        Machine.Input.OnAttackPressed += HandleComboInput;
     }
 
     public override void Tick(float deltaTime)
@@ -73,13 +73,13 @@ public class PlayerAttackState : PlayerState
         Machine.Locomotion.StayInPlace(deltaTime);
     }
 
-    private void Input_OnAttackPressed()
+    private void HandleComboInput()
     {
         _comboBuffer = true;
     }
 
     public override void Exit()
     {
-        Machine.Input.OnAttackPressed -= Input_OnAttackPressed;
+        Machine.Input.OnAttackPressed -= HandleComboInput;
     }
 }
