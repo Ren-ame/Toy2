@@ -6,7 +6,8 @@ public class PlayerAttackState : PlayerState
     {
     }
 
-    private const float CombFinish = 0.6f;
+    private const float ComboFinish = 0.6f;
+    private const float HoldThreshold = 0.15f;
     private const float UseStamina = 0.2f;
     private const float HitboxOn = 0.25f;
     private const float HitboxOff = 0.5f;
@@ -15,18 +16,18 @@ public class PlayerAttackState : PlayerState
     private enum HitboxState { Waiting, Active, Finished }
     private HitboxState _hitboxState;
 
-    private bool ComboBuffer;
-    private int ComboCount;
-    private int[] ComboDamage = { 12, 12, 18 };
+    private bool _comboBuffer;
+    private int _comboCount;
+    private int[] _comboDamage = { 12, 12, 18 };
     public float[] StaminaCost = { 15, 30 };
 
     private float _elapsed;
 
     public override void Enter()
     {
-        ComboCount = 0;
+        _comboCount = 0;
         _elapsed = 0f;
-        ComboBuffer = false;
+        _comboBuffer = false;
         _hitboxState = HitboxState.Waiting;
 
         Machine.Input.OnAttackPressed += Input_OnAttackPressed;
@@ -36,7 +37,7 @@ public class PlayerAttackState : PlayerState
     {
         _elapsed += deltaTime;
 
-        if (_elapsed >= 0.15f)
+        if (_elapsed >= HoldThreshold)
         {
 
         }
@@ -63,7 +64,7 @@ public class PlayerAttackState : PlayerState
             _hitboxState = HitboxState.Finished;
         }
 
-        if (_elapsed >= CombFinish)
+        if (_elapsed >= ComboFinish)
         {
             Machine.ChangeState(new PlayerIdleState(Machine));
             return;
@@ -74,7 +75,7 @@ public class PlayerAttackState : PlayerState
 
     private void Input_OnAttackPressed()
     {
-        ComboBuffer = true;
+        _comboBuffer = true;
     }
 
     public override void Exit()
