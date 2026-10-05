@@ -52,4 +52,9 @@ public class StaminaComponent : MonoBehaviour
         OnChanged?.Invoke(CurrentStamina, MaxStamina);
     }
 
+    public bool CanConsume(float amount)
+    {
+        if (CurrentStamina < amount) return false;
+        return true;
+    }
 }

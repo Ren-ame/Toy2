@@ -19,7 +19,10 @@ public class PlayerAttackState : PlayerState
     private bool _comboBuffer;
     private int _comboCount;
     private int[] _comboDamage = { 12, 12, 18 };
-    public float[] StaminaCost = { 15, 30 };
+
+    private bool _staminaConsumed;
+    public const float LightStaminaCost = 15f;
+    public const float HeavyStaminaCost = 30f;
 
     private float _elapsed;
 
@@ -29,6 +32,7 @@ public class PlayerAttackState : PlayerState
         _elapsed = 0f;
         _comboBuffer = false;
         _hitboxState = HitboxState.Waiting;
+        _staminaConsumed = false;
 
         Machine.Input.OnAttackPressed += HandleComboInput;
     }
@@ -42,9 +46,11 @@ public class PlayerAttackState : PlayerState
 
         }
 
-        if (_elapsed >= UseStamina)
+        if (_elapsed >= UseStamina && _staminaConsumed == false)
         {
-
+            _staminaConsumed = true;
+            Machine.Stamina.TryConsume(LightStaminaCost);
+            Debug.Log(Machine.Stamina.CurrentStamina);
         }
 
         if (_elapsed >= HitboxOn && _hitboxState == HitboxState.Waiting)
