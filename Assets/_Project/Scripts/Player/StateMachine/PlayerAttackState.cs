@@ -6,12 +6,13 @@ public class PlayerAttackState : PlayerState
     {
     }
 
-    private const float ComboFinish = 0.6f;
     private const float HoldThreshold = 0.15f;
     private const float UseStamina = 0.2f;
     private const float HitboxOn = 0.25f;
-    private const float HitboxOff = 0.5f;
     private const float InputBuffer = 0.3f;
+    private const float ComboWindowOpen = 0.4f;
+    private const float HitboxOff = 0.5f;
+    private const float ComboFinish = 0.6f;
 
     private enum HitboxState { Waiting, Active, Finished }
     private HitboxState _hitboxState;
@@ -59,9 +60,21 @@ public class PlayerAttackState : PlayerState
             _hitboxState = HitboxState.Active;
         }
 
-        if (_elapsed >= InputBuffer)
+        if (_elapsed >= ComboWindowOpen && _comboBuffer == true)
         {
-            
+            if (Machine.Stamina.CanConsume(LightStaminaCost))
+            {
+                _comboCount += 1;
+                _elapsed = 0f;
+                _comboBuffer = false;
+                _hitboxState = HitboxState.Waiting;
+                _staminaConsumed = false;
+            }
+            else
+            {
+                Machine.ChangeState(new PlayerIdleState(Machine));
+                return; 
+            }
         }
 
         if (_elapsed >= HitboxOff && _hitboxState == HitboxState.Active)
@@ -81,7 +94,11 @@ public class PlayerAttackState : PlayerState
 
     private void HandleComboInput()
     {
-        _comboBuffer = true;
+        if (_elapsed >= InputBuffer)
+        {
+            _comboBuffer = true;
+            Debug.Log("예약됨");
+        }
     }
 
     public override void Exit()
