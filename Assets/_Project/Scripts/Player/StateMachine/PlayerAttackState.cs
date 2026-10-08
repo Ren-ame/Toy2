@@ -51,7 +51,7 @@ public class PlayerAttackState : PlayerState
         {
             _staminaConsumed = true;
             Machine.Stamina.TryConsume(LightStaminaCost);
-            Debug.Log(Machine.Stamina.CurrentStamina);
+            Debug.Log("콤보: " + (_comboCount + 1) + " / 스태미나: " + Machine.Stamina.CurrentStamina);
         }
 
         if (_elapsed >= HitboxOn && _hitboxState == HitboxState.Waiting)
@@ -62,23 +62,26 @@ public class PlayerAttackState : PlayerState
 
         if (_elapsed >= ComboWindowOpen && _comboBuffer == true)
         {
-            if (Machine.Stamina.CanConsume(LightStaminaCost))
+            if (_comboCount < 2)
             {
-                if (_hitboxState == HitboxState.Active)
+                if (Machine.Stamina.CanConsume(LightStaminaCost))
                 {
-                    Debug.Log("Hitbox Off"); 
+                    if (_hitboxState == HitboxState.Active)
+                    {
+                        Debug.Log("Hitbox Off"); 
+                    }
+                    _comboCount += 1;
+                    _elapsed = 0f;
+                    _comboBuffer = false;
+                    _hitboxState = HitboxState.Waiting;
+                    _staminaConsumed = false; 
                 }
-                _comboCount += 1;
-                _elapsed = 0f;
-                _comboBuffer = false;
-                _hitboxState = HitboxState.Waiting;
-                _staminaConsumed = false;
-            }
-            else
-            {
-                Debug.Log("Stamina Not Enough");
-                Machine.ChangeState(new PlayerIdleState(Machine));
-                return; 
+                else
+                {
+                    Debug.Log("Stamina Not Enough");
+                    Machine.ChangeState(new PlayerIdleState(Machine));
+                    return; 
+                }
             }
         }
 
