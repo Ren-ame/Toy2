@@ -64,6 +64,10 @@ public class PlayerAttackState : PlayerState
         {
             if (Machine.Stamina.CanConsume(LightStaminaCost))
             {
+                if (_hitboxState == HitboxState.Active)
+                {
+                    Debug.Log("Hitbox Off"); 
+                }
                 _comboCount += 1;
                 _elapsed = 0f;
                 _comboBuffer = false;
@@ -72,6 +76,7 @@ public class PlayerAttackState : PlayerState
             }
             else
             {
+                Debug.Log("Stamina Not Enough");
                 Machine.ChangeState(new PlayerIdleState(Machine));
                 return; 
             }
@@ -104,5 +109,10 @@ public class PlayerAttackState : PlayerState
     public override void Exit()
     {
         Machine.Input.OnAttackPressed -= HandleComboInput;
+
+        if (_hitboxState == HitboxState.Active)
+        {
+            Debug.Log("Hitbox Off");
+        }
     }
 }
