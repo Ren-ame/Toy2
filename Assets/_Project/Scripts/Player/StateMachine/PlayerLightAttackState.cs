@@ -50,7 +50,19 @@ public class PlayerLightAttackState : PlayerState
 
             if (Machine.Input.AttackHeld)
             {
-                Debug.Log("강공");
+                if (Machine.Stamina.CanConsume(PlayerHeavyAttackState.HeavyStaminaCost))
+                {
+                    Debug.Log("강공");
+                    Debug.Log("스태미나: " + Machine.Stamina.CurrentStamina);
+                    Machine.ChangeState(new PlayerHeavyAttackState(Machine));
+                    return;
+                }
+                else
+                {
+                    Debug.Log("Stamina Not Enough");
+                    Machine.ChangeState(new PlayerIdleState(Machine));
+                    return;
+                }
             }
             else
             {
