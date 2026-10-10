@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class PlayerAttackState : PlayerState
+public class PlayerLightAttackState : PlayerState
 {
-    public PlayerAttackState(PlayerStateMachine machine) : base(machine)
+    public PlayerLightAttackState(PlayerStateMachine machine) : base(machine)
     {
     }
 
@@ -25,6 +25,8 @@ public class PlayerAttackState : PlayerState
     public const float LightStaminaCost = 15f;
     public const float HeavyStaminaCost = 30f;
 
+    private bool _holdChecked;
+
     private float _elapsed;
 
     public override void Enter()
@@ -34,6 +36,7 @@ public class PlayerAttackState : PlayerState
         _comboBuffer = false;
         _hitboxState = HitboxState.Waiting;
         _staminaConsumed = false;
+        _holdChecked = false;
 
         Machine.Input.OnAttackPressed += HandleComboInput;
     }
@@ -42,9 +45,18 @@ public class PlayerAttackState : PlayerState
     {
         _elapsed += deltaTime;
 
-        if (_elapsed >= HoldThreshold)
+        if (_elapsed >= HoldThreshold && _holdChecked == false)
         {
+            _holdChecked = true;
 
+            if (Machine.Input.AttackHeld)
+            {
+                Debug.Log("강공");
+            }
+            else
+            {
+                Debug.Log("약공");
+            }
         }
 
         if (_elapsed >= UseStamina && _staminaConsumed == false)
@@ -68,19 +80,20 @@ public class PlayerAttackState : PlayerState
                 {
                     if (_hitboxState == HitboxState.Active)
                     {
-                        Debug.Log("Hitbox Off"); 
+                        Debug.Log("Hitbox Off");
                     }
                     _comboCount += 1;
                     _elapsed = 0f;
                     _comboBuffer = false;
                     _hitboxState = HitboxState.Waiting;
-                    _staminaConsumed = false; 
+                    _staminaConsumed = false;
+                    _holdChecked = false;
                 }
                 else
                 {
                     Debug.Log("Stamina Not Enough");
                     Machine.ChangeState(new PlayerIdleState(Machine));
-                    return; 
+                    return;
                 }
             }
         }

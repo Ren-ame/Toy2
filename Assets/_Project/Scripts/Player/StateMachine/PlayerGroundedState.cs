@@ -28,9 +28,9 @@ public abstract class PlayerGroundedState : PlayerState
 
     private void HandleAttack()
     {
-        if (Machine.Stamina.CanConsume(PlayerAttackState.LightStaminaCost))
+        if (Machine.Stamina.CanConsume(PlayerLightAttackState.LightStaminaCost))
         {
-            Machine.ChangeState(new PlayerAttackState(Machine));
+            Machine.ChangeState(new PlayerLightAttackState(Machine));
         }
     }
 }
