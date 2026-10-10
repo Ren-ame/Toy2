@@ -23,7 +23,6 @@ public class PlayerLightAttackState : PlayerState
 
     private bool _staminaConsumed;
     public const float LightStaminaCost = 15f;
-    public const float HeavyStaminaCost = 30f;
 
     private bool _holdChecked;
 
@@ -68,7 +67,7 @@ public class PlayerLightAttackState : PlayerState
 
         if (_elapsed >= HitboxOn && _hitboxState == HitboxState.Waiting)
         {
-            Debug.Log("Hitbox On");
+            Debug.Log("Light Attack Hitbox On");
             _hitboxState = HitboxState.Active;
         }
 
@@ -80,7 +79,7 @@ public class PlayerLightAttackState : PlayerState
                 {
                     if (_hitboxState == HitboxState.Active)
                     {
-                        Debug.Log("Hitbox Off");
+                        Debug.Log("Light Attack Hitbox Off");
                     }
                     _comboCount += 1;
                     _elapsed = 0f;
