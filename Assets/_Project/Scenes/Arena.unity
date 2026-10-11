@@ -966,9 +966,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1760253415639777168, guid: a5ba93577aa31c143b1bfb786b027d3d, type: 3}
       insertIndex: 1
       addedObject: {fileID: 800151990}
-    - targetCorrespondingSourceObject: {fileID: 1760253415639777168, guid: a5ba93577aa31c143b1bfb786b027d3d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 800151984}
   m_SourcePrefab: {fileID: 100100000, guid: a5ba93577aa31c143b1bfb786b027d3d, type: 3}
 --- !u!4 &800151982 stripped
 Transform:
@@ -980,18 +977,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1760253415639777168, guid: a5ba93577aa31c143b1bfb786b027d3d, type: 3}
   m_PrefabInstance: {fileID: 800151981}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &800151984
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 800151983}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9ff2a0caac85c14599ce30990089dbd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HitboxComponent
 --- !u!54 &800151990
 Rigidbody:
   m_ObjectHideFlags: 0
