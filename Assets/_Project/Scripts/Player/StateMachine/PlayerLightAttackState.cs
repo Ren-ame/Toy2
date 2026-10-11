@@ -80,6 +80,7 @@ public class PlayerLightAttackState : PlayerState
         if (_elapsed >= HitboxOn && _hitboxState == HitboxState.Waiting)
         {
             Debug.Log("Light Attack Hitbox On");
+            Machine.Hitbox.Activate();
             _hitboxState = HitboxState.Active;
         }
 
@@ -92,6 +93,7 @@ public class PlayerLightAttackState : PlayerState
                     if (_hitboxState == HitboxState.Active)
                     {
                         Debug.Log("Light Attack Hitbox Off");
+                        Machine.Hitbox.Deactivate();
                     }
                     _comboCount += 1;
                     _elapsed = 0f;
@@ -112,6 +114,7 @@ public class PlayerLightAttackState : PlayerState
         if (_elapsed >= HitboxOff && _hitboxState == HitboxState.Active)
         {
             Debug.Log("Hitbox Off");
+            Machine.Hitbox.Deactivate();
             _hitboxState = HitboxState.Finished;
         }
 
@@ -140,6 +143,7 @@ public class PlayerLightAttackState : PlayerState
         if (_hitboxState == HitboxState.Active)
         {
             Debug.Log("Hitbox Off");
+            Machine.Hitbox.Deactivate();
         }
     }
 }

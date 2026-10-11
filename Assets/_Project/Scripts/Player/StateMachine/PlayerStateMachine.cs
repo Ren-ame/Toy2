@@ -9,6 +9,7 @@ public class PlayerStateMachine : MonoBehaviour
     public PlayerLocomotion Locomotion { get; private set; }
     public StaminaComponent Stamina { get; private set; }
     public LockOnController LockOn { get; private set; }
+    public HitboxComponent Hitbox { get; private set; }
     public bool IsInvulnerable { get; set; }
 
     private void Awake()
@@ -17,6 +18,7 @@ public class PlayerStateMachine : MonoBehaviour
         Locomotion = GetComponent<PlayerLocomotion>();
         Stamina = GetComponent<StaminaComponent>();
         LockOn = GetComponent<LockOnController>();
+        Hitbox = GetComponentInChildren<HitboxComponent>();
     }
 
     private void Start()

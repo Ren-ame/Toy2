@@ -39,12 +39,14 @@ public class PlayerHeavyAttackState : PlayerState
         if (_elapsed >= HitboxOn && _hitboxState == HitboxState.Waiting)
         {
             Debug.Log("Heavy Attack Hitbox On");
+            Machine.Hitbox.Activate();
             _hitboxState = HitboxState.Active;
         }
 
         if (_elapsed >= HitboxOff && _hitboxState == HitboxState.Active)
         {
             Debug.Log("Heavy Attack Hitbox Off");
+            Machine.Hitbox.Deactivate();
             _hitboxState = HitboxState.Finished;
         }
 
@@ -62,6 +64,7 @@ public class PlayerHeavyAttackState : PlayerState
         if (_hitboxState == HitboxState.Active)
         {
             Debug.Log("Heavy Attack Hitbox Off");
+            Machine.Hitbox.Deactivate();
         }
     }
 }
