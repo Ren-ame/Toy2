@@ -17,6 +17,8 @@ public class PlayerHeavyAttackState : PlayerState
     private bool _staminaConsumed;
     public const float HeavyStaminaCost = 30f;
 
+    private const float _damage = 30f;
+
     private float _elapsed;
 
     public override void Enter()
@@ -39,7 +41,7 @@ public class PlayerHeavyAttackState : PlayerState
         if (_elapsed >= HitboxOn && _hitboxState == HitboxState.Waiting)
         {
             Debug.Log("Heavy Attack Hitbox On");
-            Machine.Hitbox.Activate();
+            Machine.Hitbox.Activate(_damage);
             _hitboxState = HitboxState.Active;
         }
 

@@ -19,7 +19,7 @@ public class PlayerLightAttackState : PlayerState
 
     private bool _comboBuffer;
     private int _comboCount;
-    private int[] _comboDamage = { 12, 12, 18 };
+    private float[] _comboDamage = { 12f, 12f, 18f };
 
     private bool _staminaConsumed;
     public const float LightStaminaCost = 15f;
@@ -80,7 +80,7 @@ public class PlayerLightAttackState : PlayerState
         if (_elapsed >= HitboxOn && _hitboxState == HitboxState.Waiting)
         {
             Debug.Log("Light Attack Hitbox On");
-            Machine.Hitbox.Activate();
+            Machine.Hitbox.Activate(_comboDamage[_comboCount]);
             _hitboxState = HitboxState.Active;
         }
 
