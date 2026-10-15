@@ -23,5 +23,10 @@ public class BossChaseState : BossState
         {
             Machine.Controller.SimpleMove(dir.normalized * MoveSpeed);
         }
+
+        if (dir.sqrMagnitude <= StopRange * StopRange)
+        {
+            Machine.ChangeState(new BossAttackState(Machine));
+        }
     }
 }

@@ -6,11 +6,17 @@ public class BossStateMachine : MonoBehaviour
 
     public Transform Target { get; private set; }
     public CharacterController Controller { get; private set; }
+    public HitboxComponent Hitbox { get; private set; }
+    public Renderer Body { get; private set; }
+    public Color BaseColor { get; private set; }
 
     private void Awake()
     {
         Target = GameObject.FindWithTag("Player").transform;
         Controller = GetComponent<CharacterController>();
+        Hitbox = GetComponentInChildren<HitboxComponent>();
+        Body = GetComponent<Renderer>();
+        BaseColor = Body.material.color;
     }
 
     private void Start()

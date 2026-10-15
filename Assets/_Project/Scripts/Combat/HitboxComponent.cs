@@ -19,6 +19,7 @@ public class HitboxComponent : MonoBehaviour
     {
         Debug.Log(other.gameObject.name);
 
+        if (other.transform.root == transform.root) return;
 
         if (other.gameObject.TryGetComponent<IDamageable>(out IDamageable damageable))
         {
