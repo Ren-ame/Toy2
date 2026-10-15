@@ -1906,6 +1906,7 @@ GameObject:
   - component: {fileID: 1694821125}
   - component: {fileID: 1694821130}
   - component: {fileID: 1694821129}
+  - component: {fileID: 1694821131}
   m_Layer: 6
   m_Name: Boss
   m_TagString: Boss
@@ -2031,6 +2032,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthComponent
   _maxHealth: 300
+--- !u!114 &1694821131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1694821124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b87b2b27cffb9af4087569a54053f6f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossStateMachine
 --- !u!1 &2068869223
 GameObject:
   m_ObjectHideFlags: 0
