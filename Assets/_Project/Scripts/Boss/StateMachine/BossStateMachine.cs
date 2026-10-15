@@ -5,10 +5,12 @@ public class BossStateMachine : MonoBehaviour
     private BossState _currentState;
 
     public Transform Target { get; private set; }
+    public CharacterController Controller { get; private set; }
 
     private void Awake()
     {
         Target = GameObject.FindWithTag("Player").transform;
+        Controller = GetComponent<CharacterController>();
     }
 
     private void Start()
