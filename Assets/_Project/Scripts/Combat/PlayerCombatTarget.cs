@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(HealthComponent))]
@@ -15,11 +14,6 @@ public class PlayerCombatTarget : MonoBehaviour, IDamageable
         _machine = GetComponent<PlayerStateMachine>();
     }
 
-    private void Update()
-    {
-        
-    }
-
     public DamageResult TakeDamage(in DamageInfo info)
     {
         if (!IsAlive) return DamageResult.Ignored;
@@ -28,6 +22,8 @@ public class PlayerCombatTarget : MonoBehaviour, IDamageable
         _health.Reduce(info.Damage);
         Debug.Log($"[Player] -{info.Damage} → HP {_health.CurrentHealth}");
 
-        return IsAlive ? DamageResult.Hit : DamageResult.Killed;
+        DamageResult result = IsAlive ? DamageResult.Hit : DamageResult.Killed;
+        _machine.OnDamaged(result);
+        return result;
     }
 }

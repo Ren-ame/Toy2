@@ -33,6 +33,24 @@ public class PlayerStateMachine : MonoBehaviour
         _currentState.Enter();
     }
 
+    public void OnDamaged(DamageResult result)
+    {
+        if (result == DamageResult.Killed)
+        {
+            ChangeState(new PlayerDeadState(this));
+            return;
+        }
+
+        if (result == DamageResult.Hit)
+        {
+            if (_currentState is PlayerHitState hitState)
+            {
+                hitState.Extend();
+            }
+            else ChangeState(new PlayerHitState(this));
+        }
+    }
+
     private void Update()
     {
         _currentState?.Tick(Time.deltaTime);
