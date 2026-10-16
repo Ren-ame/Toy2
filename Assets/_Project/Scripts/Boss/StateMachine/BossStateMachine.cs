@@ -39,6 +39,17 @@ public class BossStateMachine : MonoBehaviour
         }
     }
 
+    public void FaceTarget(float rotateSpeed, float deltaTime)
+    {
+        Vector3 dir = Target.position - transform.position;
+        dir.y = 0f;
+        if (dir.sqrMagnitude < 0.0001f) return;
+
+        Quaternion targetRot = Quaternion.LookRotation(dir);
+        transform.rotation = Quaternion.RotateTowards(
+            transform.rotation, targetRot, rotateSpeed * deltaTime);
+    }
+
     private void Update()
     {
         _currentState?.Tick(Time.deltaTime);

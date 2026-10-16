@@ -14,10 +14,8 @@ public class BossChaseState : BossState
     {
         Vector3 dir = Machine.Target.position - Machine.transform.position;
         dir.y = 0f;
-        
-        Quaternion targetRot = Quaternion.LookRotation(dir);
-        Machine.transform.rotation = Quaternion.RotateTowards(
-            Machine.transform.rotation, targetRot, RotateSpeed * deltaTime);
+
+        Machine.FaceTarget(RotateSpeed, deltaTime);
 
         if (dir.sqrMagnitude > StopRange * StopRange)
         {

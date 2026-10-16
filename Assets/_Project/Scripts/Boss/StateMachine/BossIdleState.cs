@@ -15,6 +15,8 @@ public class BossIdleState : BossState
 
     public override void Tick(float deltaTime)
     {
+        Machine.Controller.SimpleMove(Vector3.zero);
+
         Vector3 dir = Machine.Target.position - Machine.transform.position;
 
         if (dir.sqrMagnitude <= DetectRange * DetectRange)
