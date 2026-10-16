@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class HealthComponent : MonoBehaviour
+public class HealthComponent : MonoBehaviour, IGauge
 {
     [SerializeField] private float _maxHealth = 100f;
     public float CurrentHealth { get; private set; }

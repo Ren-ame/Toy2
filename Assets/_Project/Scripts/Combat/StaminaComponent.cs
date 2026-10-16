@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class StaminaComponent : MonoBehaviour
+public class StaminaComponent : MonoBehaviour, IGauge
 {
     [SerializeField] private float _maxStamina = 100f;
     [SerializeField] private float _regenPerSecond = 35f;

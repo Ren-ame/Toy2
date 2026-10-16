@@ -7,6 +7,7 @@ public class LockOnController : MonoBehaviour
     private Transform _target;
     [SerializeField] private Transform _lockOnPivot;
     [SerializeField] private float _lockOnRange = 20f;
+    public float LockOnRange => _lockOnRange;
     [SerializeField] private LayerMask _targetLayer;
 
     private Camera _mainCamera;
