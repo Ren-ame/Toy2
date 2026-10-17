@@ -10,6 +10,9 @@ public class BossStateMachine : MonoBehaviour
     public Renderer Body { get; private set; }
     public Color BaseColor { get; private set; }
 
+    [SerializeField] private bool _canAttack = true;
+    public bool CanAttack => _canAttack;
+
     private void Awake()
     {
         Target = GameObject.FindWithTag("Player").transform;

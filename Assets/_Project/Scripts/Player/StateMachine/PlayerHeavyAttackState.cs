@@ -19,12 +19,15 @@ public class PlayerHeavyAttackState : PlayerState
 
     private const float _damage = 30f;
 
+    private Transform _aimTarget;
+
     private float _elapsed;
 
     public override void Enter()
     {
         _hitboxState = HitboxState.Waiting;
         _staminaConsumed = false;
+        _aimTarget = Machine.LockOn.GetAttackTarget();
     }
 
     public override void Tick(float deltaTime)
@@ -56,6 +59,11 @@ public class PlayerHeavyAttackState : PlayerState
         {
             Machine.ChangeState(new PlayerIdleState(Machine));
             return;
+        }
+
+        if (_hitboxState == HitboxState.Waiting && _aimTarget != null)
+        {
+            Machine.Locomotion.FaceTowards(_aimTarget.position);
         }
 
         Machine.Locomotion.StayInPlace(deltaTime);

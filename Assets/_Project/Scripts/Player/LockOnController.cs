@@ -9,12 +9,14 @@ public class LockOnController : MonoBehaviour
     [SerializeField] private float _lockOnRange = 20f;
     public float LockOnRange => _lockOnRange;
     [SerializeField] private LayerMask _targetLayer;
+    [SerializeField] private float _assistRange = 4f;
+    [SerializeField] private float _assistAngle = 120f;
 
     private Camera _mainCamera;
     [SerializeField] private CinemachineCamera _lockOnCamera;
 
     private PlayerInputReader _input;
-    
+
     public bool IsLockedOn { get; private set; }
 
     private void Awake()
@@ -47,7 +49,7 @@ public class LockOnController : MonoBehaviour
 
     private void TryLockOn()
     {
-        Transform found = FindNearestTarget();
+        Transform found = FindNearestTarget(_lockOnRange, 360f, true);
 
         if (found == null)
             return;
@@ -79,15 +81,25 @@ public class LockOnController : MonoBehaviour
         _lockOnPivot.rotation = Quaternion.LookRotation(toTarget);
     }
 
-    private Transform FindNearestTarget()
+    private Transform FindNearestTarget(float range, float maxAngle, bool requireOnScreen)
     {
-        Collider[] hits = Physics.OverlapSphere(transform.position, _lockOnRange, _targetLayer);
+        Collider[] hits = Physics.OverlapSphere(transform.position, range, _targetLayer);
         Transform nearest = null;
         float minSqrDistance = float.MaxValue;
 
         foreach (Collider col in hits)
         {
-            if (IsOnScreen(col.transform.position) == false)
+            if (requireOnScreen == true)
+            {
+                if (IsOnScreen(col.transform.position) == false)
+                    continue;
+            }
+
+            Vector3 dir = col.transform.position - transform.position;
+            dir.y = 0f;
+            float angle = Vector3.Angle(transform.forward, dir);
+
+            if (angle > maxAngle * 0.5f)
                 continue;
 
             float sqrDistance = (col.transform.position - transform.position).sqrMagnitude;
@@ -99,6 +111,13 @@ public class LockOnController : MonoBehaviour
             }
         }
         return nearest;
+    }
+
+    public Transform GetAttackTarget()
+    {
+        if (IsLockedOn == true)
+            return _target;
+        return FindNearestTarget(_assistRange, _assistAngle, false);
     }
 
     private bool IsOnScreen(Vector3 worldPosition)

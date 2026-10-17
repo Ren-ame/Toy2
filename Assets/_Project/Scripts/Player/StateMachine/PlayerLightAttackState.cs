@@ -26,6 +26,8 @@ public class PlayerLightAttackState : PlayerState
 
     private bool _holdChecked;
 
+    private Transform _aimTarget;
+
     private float _elapsed;
 
     public override void Enter()
@@ -36,6 +38,7 @@ public class PlayerLightAttackState : PlayerState
         _hitboxState = HitboxState.Waiting;
         _staminaConsumed = false;
         _holdChecked = false;
+        _aimTarget = Machine.LockOn.GetAttackTarget();
 
         Machine.Input.OnAttackPressed += HandleComboInput;
     }
@@ -101,6 +104,7 @@ public class PlayerLightAttackState : PlayerState
                     _hitboxState = HitboxState.Waiting;
                     _staminaConsumed = false;
                     _holdChecked = false;
+                    _aimTarget = Machine.LockOn.GetAttackTarget();
                 }
                 else
                 {
@@ -122,6 +126,11 @@ public class PlayerLightAttackState : PlayerState
         {
             Machine.ChangeState(new PlayerIdleState(Machine));
             return;
+        }
+
+        if (_hitboxState == HitboxState.Waiting && _aimTarget != null)
+        {
+            Machine.Locomotion.FaceTowards(_aimTarget.position);
         }
 
         Machine.Locomotion.StayInPlace(deltaTime);

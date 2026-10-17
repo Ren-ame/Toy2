@@ -22,7 +22,7 @@ public class BossChaseState : BossState
             Machine.Controller.SimpleMove(dir.normalized * MoveSpeed);
         }
 
-        if (dir.sqrMagnitude <= StopRange * StopRange)
+        if (dir.sqrMagnitude <= StopRange * StopRange && Machine.CanAttack == true)
         {
             Machine.ChangeState(new BossAttackState(Machine));
         }

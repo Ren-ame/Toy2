@@ -52,6 +52,17 @@ public class PlayerLocomotion : MonoBehaviour
         transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, _rotationSpeed * Time.deltaTime);
     }
 
+    public void FaceTowards(Vector3 targetPosition)
+    {
+        Vector3 dir = targetPosition - transform.position;
+        dir.y = 0f;
+
+        if (dir.sqrMagnitude < 0.0001f)
+            return;
+
+        RotateTowards(dir);
+    }
+
     public void MoveInDirection(Vector3 direction, float speed, float deltaTime)
     {
         UpdateVerticalVelocity(deltaTime);

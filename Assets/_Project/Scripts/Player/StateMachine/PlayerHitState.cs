@@ -6,7 +6,7 @@ public class PlayerHitState : PlayerState
     {
     }
 
-    private const float Duration = 0.5f;
+    private const float Duration = 0.3f;
     private const float DodgeCancelTime = 0.3f;
     private const float FirstExtend = 0.2f;
 
