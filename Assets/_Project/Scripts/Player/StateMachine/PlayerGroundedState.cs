@@ -10,12 +10,14 @@ public abstract class PlayerGroundedState : PlayerState
     {
         Machine.Input.OnDodgePressed += HandleDodge;
         Machine.Input.OnAttackPressed += HandleAttack;
+        Machine.Input.OnParryPressed += HandleParry;
     }
 
     public override void Exit()
     {
         Machine.Input.OnDodgePressed -= HandleDodge;
         Machine.Input.OnAttackPressed -= HandleAttack;
+        Machine.Input.OnParryPressed -= HandleParry;
     }
 
     private void HandleDodge()
@@ -32,5 +34,10 @@ public abstract class PlayerGroundedState : PlayerState
         {
             Machine.ChangeState(new PlayerLightAttackState(Machine));
         }
+    }
+
+    private void HandleParry()
+    {
+        Machine.ChangeState(new PlayerGuardState(Machine));
     }
 }

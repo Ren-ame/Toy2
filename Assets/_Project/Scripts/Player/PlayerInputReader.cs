@@ -8,6 +8,7 @@ public class PlayerInputReader : MonoBehaviour
     public Vector2 MoveInput { get; private set; }
     public Vector2 LookInput { get; private set; }
     public bool AttackHeld => _controls.Gameplay.Attack.IsPressed();
+    public bool ParryHeld => _controls.Gameplay.Parry.IsPressed();
 
     public event Action OnAttackPressed;
     public event Action OnDodgePressed;
