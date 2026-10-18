@@ -52,3 +52,6 @@ crashlytics-build.properties
 
 # ---- Unity Cache Server ----
 sysinfo.txt
+
+*.rar
+*.zip
