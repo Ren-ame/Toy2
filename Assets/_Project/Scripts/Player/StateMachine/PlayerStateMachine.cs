@@ -11,6 +11,8 @@ public class PlayerStateMachine : MonoBehaviour
     public LockOnController LockOn { get; private set; }
     public HitboxComponent Hitbox { get; private set; }
     public bool IsInvulnerable { get; set; }
+    public bool IsParrying { get; set; }
+    public bool IsGuarding { get; set; }
 
     private void Awake()
     {

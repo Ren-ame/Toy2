@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 
 public class HitboxComponent : MonoBehaviour
@@ -9,9 +10,12 @@ public class HitboxComponent : MonoBehaviour
 
     private HashSet<IDamageable> _hitList = new HashSet<IDamageable>();
 
+    private GameObject _owner;
+
     private void Awake()
     {
         _collider = GetComponent<Collider>();
+        _owner = transform.root.gameObject;
         Deactivate();
     }
 
@@ -21,15 +25,14 @@ public class HitboxComponent : MonoBehaviour
 
         if (other.transform.root == transform.root) return;
 
-        if (other.gameObject.TryGetComponent<IDamageable>(out IDamageable damageable))
+        if (other.gameObject.TryGetComponent<IDamageable>(out IDamageable target))
         {
-            if (_hitList.Contains(damageable) == false)
+            if (_hitList.Contains(target) == false)
             {
-                _hitList.Add(damageable); 
-                DamageInfo damageInfo = new DamageInfo(_damage, 0, false, Vector3.zero, Vector3.zero, null);
-                damageable.TakeDamage(damageInfo);
+                _hitList.Add(target); 
+                DamageInfo damageInfo = new DamageInfo(_damage, 0, false, Vector3.zero, Vector3.zero, transform.root.gameObject);
+                target.TakeDamage(damageInfo);
             }
-
         }
     }
 

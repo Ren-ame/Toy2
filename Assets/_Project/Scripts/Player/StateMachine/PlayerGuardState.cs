@@ -7,7 +7,7 @@ public class PlayerGuardState : PlayerState
     }
 
     private const float GuardMoveSpeed = 1.5f;
-    private const float ParryWindow = 0.2f;
+    private const float ParryWindow = 0.5f;
     private bool _windowClosed;
 
     private float _elapsed;
@@ -16,6 +16,7 @@ public class PlayerGuardState : PlayerState
     {
         _elapsed = 0f;
         Debug.Log("패링 창 열림");
+        Machine.IsParrying = true;
     }
 
     public override void Tick(float deltaTime)
@@ -26,7 +27,8 @@ public class PlayerGuardState : PlayerState
         {
             Debug.Log("가드");
             _windowClosed = true;
-
+            Machine.IsParrying = false;
+            Machine.IsGuarding = true;
         }
 
         if (_windowClosed == true && Machine.Input.ParryHeld == false)
@@ -46,6 +48,7 @@ public class PlayerGuardState : PlayerState
 
     public override void Exit()
     {
-
+        Machine.IsParrying = false;
+        Machine.IsGuarding = false;
     }
 }
