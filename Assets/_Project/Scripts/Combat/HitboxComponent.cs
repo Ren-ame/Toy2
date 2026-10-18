@@ -1,5 +1,5 @@
+using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using UnityEngine;
 
 public class HitboxComponent : MonoBehaviour
@@ -9,6 +9,8 @@ public class HitboxComponent : MonoBehaviour
     private float _damage;
 
     private HashSet<IDamageable> _hitList = new HashSet<IDamageable>();
+
+    public event Action<DamageResult> OnHitResult;
 
     private GameObject _owner;
 
@@ -23,15 +25,16 @@ public class HitboxComponent : MonoBehaviour
     {
         Debug.Log(other.gameObject.name);
 
-        if (other.transform.root == transform.root) return;
+        if (other.transform.root.gameObject == _owner) return;
 
         if (other.gameObject.TryGetComponent<IDamageable>(out IDamageable target))
         {
             if (_hitList.Contains(target) == false)
             {
                 _hitList.Add(target); 
-                DamageInfo damageInfo = new DamageInfo(_damage, 0, false, Vector3.zero, Vector3.zero, transform.root.gameObject);
-                target.TakeDamage(damageInfo);
+                DamageInfo damageInfo = new DamageInfo(_damage, 0, false, Vector3.zero, Vector3.zero, _owner);
+                DamageResult getDamage = target.TakeDamage(damageInfo);
+                OnHitResult?.Invoke(getDamage);
             }
         }
     }
@@ -47,4 +50,5 @@ public class HitboxComponent : MonoBehaviour
     {
         _collider.enabled = false;
     }
+
 }

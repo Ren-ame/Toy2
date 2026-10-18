@@ -1,3 +1,5 @@
+using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BossStateMachine : MonoBehaviour
@@ -56,5 +58,23 @@ public class BossStateMachine : MonoBehaviour
     private void Update()
     {
         _currentState?.Tick(Time.deltaTime);
+    }
+
+    private void OnEnable()
+    {
+        Hitbox.OnHitResult += HandleHitResult;
+    }
+
+    private void OnDisable()
+    {
+        Hitbox.OnHitResult -= HandleHitResult;
+    }
+
+    private void HandleHitResult(DamageResult result)
+    {
+        if (result == DamageResult.Parried)
+        {
+            ChangeState(new BossStaggerState(this));
+        }
     }
 }
