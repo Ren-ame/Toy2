@@ -67,7 +67,7 @@ public static class MixamoClipSetup
                 clip.lockRootHeightY = true;           // Y: Bake Into Pose (쓰러짐·구르기 높이 유지)
                 clip.keepOriginalPositionY = true;     //   Based Upon: Original
                 clip.lockRootPositionXZ = !locomotion; // XZ: 이동 클립만 굽지 않음
-                clip.keepOriginalPositionXZ = true;
+                clip.keepOriginalPositionXZ = !locomotion; // 이동 클립은 Center of Mass 기준으로 뽑아야 몸이 제자리에 남음
                 clips[i] = clip;
             }
 

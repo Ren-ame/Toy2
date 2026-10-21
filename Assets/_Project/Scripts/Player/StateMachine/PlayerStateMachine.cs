@@ -11,6 +11,7 @@ public class PlayerStateMachine : MonoBehaviour
     public LockOnController LockOn { get; private set; }
     public HitboxComponent Hitbox { get; private set; }
     public Animator Animator { get; private set; }
+    public WeaponGrip Grip { get; private set; }
     public bool IsInvulnerable { get; set; }
     public bool IsParrying { get; set; }
     public bool IsGuarding { get; set; }
@@ -23,6 +24,7 @@ public class PlayerStateMachine : MonoBehaviour
         LockOn = GetComponent<LockOnController>();
         Hitbox = GetComponentInChildren<HitboxComponent>();
         Animator = GetComponentInChildren<Animator>();
+        Grip = GetComponentInChildren<WeaponGrip>();
     }
 
     private void Start()

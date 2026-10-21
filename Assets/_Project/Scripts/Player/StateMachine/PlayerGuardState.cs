@@ -21,6 +21,7 @@ public class PlayerGuardState : PlayerState
 
         PlayAnimation("GuardMove");
         Machine.Animator.SetLayerWeight(1, 1f);
+        Machine.Grip?.SetGuard(true);
     }
 
     public override void Tick(float deltaTime)
@@ -58,5 +59,6 @@ public class PlayerGuardState : PlayerState
         Machine.IsParrying = false;
         Machine.IsGuarding = false;
         Machine.Animator.SetLayerWeight(1, 0f);
+        Machine.Grip?.SetGuard(false);
     }
 }
