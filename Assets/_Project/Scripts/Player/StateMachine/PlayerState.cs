@@ -13,4 +13,11 @@ public abstract class PlayerState
     public virtual void Tick(float deltaTime) { }
 
     public virtual void Exit() { }
+
+    public virtual void OnAnimationEvent(string eventName, int index) { }
+
+    protected void PlayAnimation(string stateName, float fade = 0.1f)
+    {
+        Machine.Animator.CrossFadeInFixedTime(stateName, fade);
+    }
 }

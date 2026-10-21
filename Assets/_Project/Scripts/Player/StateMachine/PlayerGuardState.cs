@@ -14,9 +14,13 @@ public class PlayerGuardState : PlayerState
 
     public override void Enter()
     {
+        base.Enter();
         _elapsed = 0f;
         Debug.Log("패링 창 열림");
         Machine.IsParrying = true;
+
+        PlayAnimation("GuardMove");
+        Machine.Animator.SetLayerWeight(1, 1f);
     }
 
     public override void Tick(float deltaTime)
@@ -44,11 +48,15 @@ public class PlayerGuardState : PlayerState
 
         Vector3 dir = Machine.Locomotion.GetCameraRelativeDirection(Machine.Input.MoveInput);
         Machine.Locomotion.MoveInDirection(dir, GuardMoveSpeed, deltaTime);
+        Vector3 local = Machine.transform.InverseTransformDirection(dir);
+        Machine.Animator.SetFloat("MoveX", local.x, 0.1f, deltaTime);
+        Machine.Animator.SetFloat("MoveY", local.z, 0.1f, deltaTime);
     }
 
     public override void Exit()
     {
         Machine.IsParrying = false;
         Machine.IsGuarding = false;
+        Machine.Animator.SetLayerWeight(1, 0f);
     }
 }

@@ -6,6 +6,12 @@ public class PlayerMoveState : PlayerGroundedState
     {
     }
 
+    public override void Enter()
+    {
+        base.Enter();
+        PlayAnimation("Move");
+    }
+
     public override void Tick(float deltaTime)
     {
         Vector2 input = Machine.Input.MoveInput;

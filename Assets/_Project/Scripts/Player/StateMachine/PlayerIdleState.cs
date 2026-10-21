@@ -6,6 +6,12 @@ public class PlayerIdleState : PlayerGroundedState
     {
     }
 
+    public override void Enter()
+    {
+        base.Enter();
+        PlayAnimation("Idle");
+    }
+
     public override void Tick(float deltaTime)
     {
         base.Tick(deltaTime);

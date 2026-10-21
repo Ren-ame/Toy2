@@ -27,6 +27,7 @@ public class PlayerCombatTarget : MonoBehaviour, IDamageable
         if (_machine.IsParrying && IsFrontal(info))                 // 패리
         {
             Debug.Log("패리됨");
+            _machine.OnDamaged(DamageResult.Parried);
             return DamageResult.Parried;
         }
         if (_machine.IsGuarding && IsFrontal(info))                 // 가드

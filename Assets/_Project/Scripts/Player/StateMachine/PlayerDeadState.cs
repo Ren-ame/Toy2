@@ -8,7 +8,10 @@ public class PlayerDeadState : PlayerState
 
     public override void Enter()
     {
+        base.Enter();
         Debug.Log("[Player] Dead");
+
+        PlayAnimation("Death");
     }
 
     public override void Tick(float deltaTime)

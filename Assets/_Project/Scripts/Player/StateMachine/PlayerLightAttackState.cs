@@ -6,22 +6,18 @@ public class PlayerLightAttackState : PlayerState
     {
     }
 
-    private const float HoldThreshold = 0.15f;
-    private const float UseStamina = 0.2f;
-    private const float HitboxOn = 0.25f;
+    private const float HoldThreshold = 0.25f;
     private const float InputBuffer = 0.3f;
-    private const float ComboWindowOpen = 0.4f;
-    private const float HitboxOff = 0.5f;
-    private const float ComboFinish = 0.6f;
 
     private enum HitboxState { Waiting, Active, Finished }
     private HitboxState _hitboxState;
 
     private bool _comboBuffer;
+    private bool _comboWindowOpen;
     private int _comboCount;
     private float[] _comboDamage = { 12f, 12f, 18f };
+    private string[] _comboAnimations = { "Attack1", "Attack2", "Attack3" };
 
-    private bool _staminaConsumed;
     public const float LightStaminaCost = 15f;
 
     private bool _holdChecked;
@@ -32,15 +28,18 @@ public class PlayerLightAttackState : PlayerState
 
     public override void Enter()
     {
+        base.Enter();
         _comboCount = 0;
+        _comboWindowOpen = false;
         _elapsed = 0f;
         _comboBuffer = false;
         _hitboxState = HitboxState.Waiting;
-        _staminaConsumed = false;
         _holdChecked = false;
         _aimTarget = Machine.LockOn.GetAttackTarget();
 
         Machine.Input.OnAttackPressed += HandleComboInput;
+
+        PlayAnimation(_comboAnimations[0]);
     }
 
     public override void Tick(float deltaTime)
@@ -70,24 +69,12 @@ public class PlayerLightAttackState : PlayerState
             else
             {
                 Debug.Log("약공");
+                Machine.Stamina.TryConsume(LightStaminaCost);
+                Debug.Log("콤보: " + (_comboCount + 1) + " / 스태미나: " + Machine.Stamina.CurrentStamina);
             }
         }
 
-        if (_elapsed >= UseStamina && _staminaConsumed == false)
-        {
-            _staminaConsumed = true;
-            Machine.Stamina.TryConsume(LightStaminaCost);
-            Debug.Log("콤보: " + (_comboCount + 1) + " / 스태미나: " + Machine.Stamina.CurrentStamina);
-        }
-
-        if (_elapsed >= HitboxOn && _hitboxState == HitboxState.Waiting)
-        {
-            Debug.Log("Light Attack Hitbox On");
-            Machine.Hitbox.Activate(_comboDamage[_comboCount]);
-            _hitboxState = HitboxState.Active;
-        }
-
-        if (_elapsed >= ComboWindowOpen && _comboBuffer == true)
+        if (_comboWindowOpen == true && _comboBuffer == true)
         {
             if (_comboCount < 2)
             {
@@ -99,10 +86,11 @@ public class PlayerLightAttackState : PlayerState
                         Machine.Hitbox.Deactivate();
                     }
                     _comboCount += 1;
+                    PlayAnimation(_comboAnimations[_comboCount]);
                     _elapsed = 0f;
                     _comboBuffer = false;
+                    _comboWindowOpen = false;
                     _hitboxState = HitboxState.Waiting;
-                    _staminaConsumed = false;
                     _holdChecked = false;
                     _aimTarget = Machine.LockOn.GetAttackTarget();
                 }
@@ -115,25 +103,41 @@ public class PlayerLightAttackState : PlayerState
             }
         }
 
-        if (_elapsed >= HitboxOff && _hitboxState == HitboxState.Active)
-        {
-            Debug.Log("Hitbox Off");
-            Machine.Hitbox.Deactivate();
-            _hitboxState = HitboxState.Finished;
-        }
-
-        if (_elapsed >= ComboFinish)
-        {
-            Machine.ChangeState(new PlayerIdleState(Machine));
-            return;
-        }
-
         if (_hitboxState == HitboxState.Waiting && _aimTarget != null)
         {
             Machine.Locomotion.FaceTowards(_aimTarget.position);
         }
 
         Machine.Locomotion.StayInPlace(deltaTime);
+    }
+
+    public override void OnAnimationEvent(string eventName, int index)
+    {
+        if (index != _comboCount) return;
+
+        switch (eventName)
+        {
+            case "HitboxOn":
+                if (_hitboxState == HitboxState.Waiting)
+                {
+                    Machine.Hitbox.Activate(_comboDamage[_comboCount]);
+                    _hitboxState = HitboxState.Active;
+                }
+                break;
+
+            case "HitboxOff":
+                if (_hitboxState == HitboxState.Active)
+                {
+                    Machine.Hitbox.Deactivate();
+                    _hitboxState = HitboxState.Finished;
+                }
+                _comboWindowOpen = true;
+                break;
+
+            case "AttackEnd":
+                Machine.ChangeState(new PlayerIdleState(Machine));
+                break;
+        }
     }
 
     private void HandleComboInput()

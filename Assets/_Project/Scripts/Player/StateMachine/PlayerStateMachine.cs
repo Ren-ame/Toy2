@@ -10,6 +10,7 @@ public class PlayerStateMachine : MonoBehaviour
     public StaminaComponent Stamina { get; private set; }
     public LockOnController LockOn { get; private set; }
     public HitboxComponent Hitbox { get; private set; }
+    public Animator Animator { get; private set; }
     public bool IsInvulnerable { get; set; }
     public bool IsParrying { get; set; }
     public bool IsGuarding { get; set; }
@@ -21,6 +22,7 @@ public class PlayerStateMachine : MonoBehaviour
         Stamina = GetComponent<StaminaComponent>();
         LockOn = GetComponent<LockOnController>();
         Hitbox = GetComponentInChildren<HitboxComponent>();
+        Animator = GetComponentInChildren<Animator>();
     }
 
     private void Start()
@@ -51,6 +53,16 @@ public class PlayerStateMachine : MonoBehaviour
             }
             else ChangeState(new PlayerHitState(this));
         }
+
+        if (result == DamageResult.Parried)
+        {
+            ChangeState(new PlayerParryState(this));
+        }
+    }
+
+    public void HandleAnimationEvent(string eventName, int index)
+    {
+        _currentState?.OnAnimationEvent(eventName, index);
     }
 
     private void Update()

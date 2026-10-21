@@ -16,6 +16,8 @@ public class PlayerDodgeState : PlayerState
 
     public override void Enter()
     {
+        base.Enter();
+
         Vector2 input = Machine.Input.MoveInput;
         _direction = Machine.Locomotion.GetCameraRelativeDirection(input);
 
@@ -29,6 +31,8 @@ public class PlayerDodgeState : PlayerState
         Machine.transform.rotation = Quaternion.LookRotation(_direction);
         Machine.IsInvulnerable = true;
         _elapsed = 0f;
+
+        PlayAnimation("Dodge");
     }
 
     public override void Tick(float deltaTime)

@@ -6,67 +6,63 @@ public class PlayerHeavyAttackState : PlayerState
     {
     }
 
-    private const float UseStamina = 0.05f;
-    private const float HitboxOn = 0.5f;
-    private const float HitboxOff = 0.75f;
-    private const float AttackFinish = 1.05f;
-
     private enum HitboxState { Waiting, Active, Finished }
     private HitboxState _hitboxState;
 
-    private bool _staminaConsumed;
     public const float HeavyStaminaCost = 30f;
 
-    private const float _damage = 30f;
+    private const float Damage = 30f;
+
+    private const int HeavyEventIndex = 3;
 
     private Transform _aimTarget;
 
-    private float _elapsed;
-
     public override void Enter()
     {
+        base.Enter();
         _hitboxState = HitboxState.Waiting;
-        _staminaConsumed = false;
         _aimTarget = Machine.LockOn.GetAttackTarget();
+
+        PlayAnimation("HeavyAttack");
+        Machine.Stamina.TryConsume(HeavyStaminaCost);
     }
 
     public override void Tick(float deltaTime)
     {
-        _elapsed += deltaTime;
-
-        if (_elapsed >= UseStamina && _staminaConsumed == false)
-        {
-            _staminaConsumed = true;
-            Machine.Stamina.TryConsume(HeavyStaminaCost);
-            Debug.Log("강공격");
-        }
-
-        if (_elapsed >= HitboxOn && _hitboxState == HitboxState.Waiting)
-        {
-            Debug.Log("Heavy Attack Hitbox On");
-            Machine.Hitbox.Activate(_damage);
-            _hitboxState = HitboxState.Active;
-        }
-
-        if (_elapsed >= HitboxOff && _hitboxState == HitboxState.Active)
-        {
-            Debug.Log("Heavy Attack Hitbox Off");
-            Machine.Hitbox.Deactivate();
-            _hitboxState = HitboxState.Finished;
-        }
-
-        if (_elapsed >= AttackFinish)
-        {
-            Machine.ChangeState(new PlayerIdleState(Machine));
-            return;
-        }
-
         if (_hitboxState == HitboxState.Waiting && _aimTarget != null)
         {
             Machine.Locomotion.FaceTowards(_aimTarget.position);
         }
 
         Machine.Locomotion.StayInPlace(deltaTime);
+    }
+
+    public override void OnAnimationEvent(string eventName, int index)
+    {
+        if (index != HeavyEventIndex) return;
+
+        switch (eventName)
+        {
+            case "HitboxOn":
+                if (_hitboxState == HitboxState.Waiting)
+                {
+                    Machine.Hitbox.Activate(Damage);
+                    _hitboxState = HitboxState.Active;
+                }
+                break;
+
+            case "HitboxOff":
+                if (_hitboxState == HitboxState.Active)
+                {
+                    Machine.Hitbox.Deactivate();
+                    _hitboxState = HitboxState.Finished;
+                }
+                break;
+
+            case "AttackEnd":
+                Machine.ChangeState(new PlayerIdleState(Machine));
+                break;
+        }
     }
 
     public override void Exit()

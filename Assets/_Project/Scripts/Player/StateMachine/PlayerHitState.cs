@@ -16,9 +16,12 @@ public class PlayerHitState : PlayerState
 
     public override void Enter()
     {
+        base.Enter();
         _duration = Duration;
         _nextExtend = FirstExtend;
         Machine.Input.OnDodgePressed += HandleDodge;
+
+        PlayAnimation("Hit");
     }
 
     public override void Tick(float deltaTime)
