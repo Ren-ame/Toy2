@@ -13,9 +13,9 @@ public class BossStaggerState : BossState
     public override void Enter()
     {
         _elapsed = 0f;
-        Machine.Body.material.color = Color.yellow;
 
         Debug.Log("경직됨");
+        Machine.Animator.CrossFade("Stagger", 0.15f);
     }
 
     public override void Tick(float deltaTime)
@@ -29,10 +29,5 @@ public class BossStaggerState : BossState
             Machine.ChangeState(new BossChaseState(Machine));
             return;
         }
-    }
-
-    public override void Exit()
-    {
-        Machine.Body.material.color = Machine.BaseColor;
     }
 }

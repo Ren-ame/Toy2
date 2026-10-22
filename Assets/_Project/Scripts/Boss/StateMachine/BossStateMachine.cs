@@ -9,8 +9,10 @@ public class BossStateMachine : MonoBehaviour
     public Transform Target { get; private set; }
     public CharacterController Controller { get; private set; }
     public HitboxComponent Hitbox { get; private set; }
-    public Renderer Body { get; private set; }
-    public Color BaseColor { get; private set; }
+    public Animator Animator { get; private set; }
+
+    [SerializeField] private Renderer _headRenderer;
+    private Material _eyeMaterial;
 
     [SerializeField] private bool _canAttack = true;
     public bool CanAttack => _canAttack;
@@ -20,8 +22,9 @@ public class BossStateMachine : MonoBehaviour
         Target = GameObject.FindWithTag("Player").transform;
         Controller = GetComponent<CharacterController>();
         Hitbox = GetComponentInChildren<HitboxComponent>();
-        Body = GetComponent<Renderer>();
-        BaseColor = Body.material.color;
+        Animator = GetComponentInChildren<Animator>();
+        _eyeMaterial = _headRenderer.material;
+        SetEyeGlow(false);
     }
 
     private void Start()
@@ -76,5 +79,15 @@ public class BossStateMachine : MonoBehaviour
         {
             ChangeState(new BossStaggerState(this));
         }
+    }
+
+    public void HandleAnimationEvent(string eventName)
+    {
+        _currentState?.OnAnimationEvent(eventName);
+    }
+
+    public void SetEyeGlow(bool on)
+    {
+        _eyeMaterial.SetFloat("_Emission", on ? 1f : 0f);
     }
 }
