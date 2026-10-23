@@ -29,7 +29,7 @@ public class BossChaseState : BossState
 
         if (dir.sqrMagnitude <= StopRange * StopRange && Machine.CanAttack == true)
         {
-            Machine.ChangeState(new BossAttackState(Machine));
+            Machine.ChangeState(new BossReadyState(Machine));
         }
     }
 }

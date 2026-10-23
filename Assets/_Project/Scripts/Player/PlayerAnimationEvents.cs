@@ -16,7 +16,7 @@ public class PlayerAnimationEvents : MonoBehaviour
         _machine.HandleAnimationEvent(evt.stringParameter, evt.intParameter);
     }
 
-    public void OnAnimatorMove()
+    private void OnAnimatorMove()
     {
         _machine.SetRootMotion(_animator.deltaPosition);
     }

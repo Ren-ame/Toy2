@@ -18,7 +18,6 @@ public class BossAttackState : BossState
         _hitboxState = HitboxState.Waiting;
 
         Machine.Animator.CrossFade("Attack1", 0.15f, 0, 0f);
-        Machine.SetEyeGlow(true);
     }
 
     public override void Tick(float deltaTime)
@@ -35,6 +34,10 @@ public class BossAttackState : BossState
     {
         switch (eventName)
         {
+            case "GlowOn":
+                Machine.SetEyeGlow(true);
+                break;
+
             case "HitboxOn":
                 if (_hitboxState == HitboxState.Waiting)
                 {

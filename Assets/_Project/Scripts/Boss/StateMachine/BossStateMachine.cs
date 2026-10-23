@@ -17,6 +17,8 @@ public class BossStateMachine : MonoBehaviour
     [SerializeField] private bool _canAttack = true;
     public bool CanAttack => _canAttack;
 
+    [SerializeField] private Light _eyeLight;
+
     private void Awake()
     {
         Target = GameObject.FindWithTag("Player").transform;
@@ -89,5 +91,6 @@ public class BossStateMachine : MonoBehaviour
     public void SetEyeGlow(bool on)
     {
         _eyeMaterial.SetFloat("_Emission", on ? 1f : 0f);
+        _eyeLight.enabled = on;
     }
 }
