@@ -12,6 +12,7 @@ public class PlayerStateMachine : MonoBehaviour
     public HitboxComponent Hitbox { get; private set; }
     public Animator Animator { get; private set; }
     public WeaponGrip Grip { get; private set; }
+    public Vector3 RootMotionDelta { get; private set; }
     public bool IsInvulnerable { get; set; }
     public bool IsParrying { get; set; }
     public bool IsGuarding { get; set; }
@@ -65,6 +66,11 @@ public class PlayerStateMachine : MonoBehaviour
     public void HandleAnimationEvent(string eventName, int index)
     {
         _currentState?.OnAnimationEvent(eventName, index);
+    }
+
+    public void SetRootMotion(Vector3 delta)
+    {
+        RootMotionDelta = delta;
     }
 
     private void Update()

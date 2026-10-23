@@ -10,6 +10,11 @@ public class BossChaseState : BossState
     private const float RotateSpeed = 360f;
     private const float StopRange = 2.5f;
 
+    public override void Enter()
+    {
+        Machine.Animator.CrossFade("Walk", 0.15f);
+    }
+
     public override void Tick(float deltaTime)
     {
         Vector3 dir = Machine.Target.position - Machine.transform.position;

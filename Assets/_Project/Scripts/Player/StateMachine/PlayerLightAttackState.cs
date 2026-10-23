@@ -21,6 +21,7 @@ public class PlayerLightAttackState : PlayerState
     public const float LightStaminaCost = 15f;
 
     private bool _holdChecked;
+    private bool _released;
 
     private Transform _aimTarget;
 
@@ -35,6 +36,7 @@ public class PlayerLightAttackState : PlayerState
         _comboBuffer = false;
         _hitboxState = HitboxState.Waiting;
         _holdChecked = false;
+        _released = false;
         _aimTarget = Machine.LockOn.GetAttackTarget();
 
         Machine.Input.OnAttackPressed += HandleComboInput;
@@ -46,11 +48,13 @@ public class PlayerLightAttackState : PlayerState
     {
         _elapsed += deltaTime;
 
+        if (!Machine.Input.AttackHeld) _released = true;
+
         if (_elapsed >= HoldThreshold && _holdChecked == false)
         {
             _holdChecked = true;
 
-            if (Machine.Input.AttackHeld)
+            if (!_released)
             {
                 if (Machine.Stamina.CanConsume(PlayerHeavyAttackState.HeavyStaminaCost))
                 {
@@ -108,7 +112,7 @@ public class PlayerLightAttackState : PlayerState
             Machine.Locomotion.FaceTowards(_aimTarget.position);
         }
 
-        Machine.Locomotion.StayInPlace(deltaTime);
+        Machine.Locomotion.MoveByDelta(Machine.RootMotionDelta, deltaTime);
     }
 
     public override void OnAnimationEvent(string eventName, int index)

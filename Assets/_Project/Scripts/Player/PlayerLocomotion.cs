@@ -83,6 +83,12 @@ public class PlayerLocomotion : MonoBehaviour
         MoveInDirection(moveDirection, _moveSpeed, deltaTime);
     }
 
+    public void MoveByDelta(Vector3 delta, float deltaTime)
+    {
+        delta.y = 0;
+        MoveInDirection(delta / deltaTime, 1f, deltaTime);
+    }
+
     public void StayInPlace(float deltaTime)
     {
         MoveInDirection(Vector3.zero, 0f, deltaTime);

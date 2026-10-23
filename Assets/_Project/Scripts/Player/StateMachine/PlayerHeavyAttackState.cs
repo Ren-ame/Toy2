@@ -34,7 +34,7 @@ public class PlayerHeavyAttackState : PlayerState
             Machine.Locomotion.FaceTowards(_aimTarget.position);
         }
 
-        Machine.Locomotion.StayInPlace(deltaTime);
+        Machine.Locomotion.MoveByDelta(Machine.RootMotionDelta, deltaTime);
     }
 
     public override void OnAnimationEvent(string eventName, int index)

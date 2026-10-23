@@ -17,7 +17,7 @@ public class BossAttackState : BossState
     {
         _hitboxState = HitboxState.Waiting;
 
-        Machine.Animator.CrossFade("Attack1", 0.15f);
+        Machine.Animator.CrossFade("Attack1", 0.15f, 0, 0f);
         Machine.SetEyeGlow(true);
     }
 
