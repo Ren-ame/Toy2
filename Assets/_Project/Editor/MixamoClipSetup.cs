@@ -8,7 +8,12 @@ using UnityEngine;
 // 메뉴: Tools > Mixamo > Apply Clip Settings
 public static class MixamoClipSetup
 {
-    private const string Folder = "Assets/_Project/Animations/Player/Pro Sword and Shield Pack";
+    private static readonly string[] Folders =
+    {
+        "Assets/_Project/Animations/Player/Pro Sword and Shield Pack",
+        "Assets/_Project/Animations/Boss/Great Sword Pack",
+        "Assets/_Project/Animations/Boss/Pattern/P3_GreatSword",
+    };
     private const string ReportPath = "Library/MixamoClipReport.txt";
     // 기사 모델(스킨 포함, T포즈 기준) — 모든 Mixamo 모션이 이 아바타를 공유하도록
     private const string KnightModelPath = "Assets/_Project/Models/medieval-knight-sculpture-game-ready/source/Dwarf Idle.fbx";
@@ -23,7 +28,7 @@ public static class MixamoClipSetup
     [MenuItem("Tools/Mixamo/Apply Clip Settings")]
     private static void Apply()
     {
-        string[] paths = AssetDatabase.FindAssets("t:Model", new[] { Folder })
+        string[] paths = AssetDatabase.FindAssets("t:Model", Folders)
             .Select(AssetDatabase.GUIDToAssetPath)
             .Where(p => p.EndsWith(".fbx", System.StringComparison.OrdinalIgnoreCase))
             .ToArray();
@@ -40,15 +45,29 @@ public static class MixamoClipSetup
             var importer = AssetImporter.GetAtPath(path) as ModelImporter;
             if (importer == null) continue;
 
-            // 스킨 없이 받은 모션은 첫 프레임 자세로 아바타가 만들어져 팔다리가 틀어짐 → 기사 아바타 복사
             importer.animationType = ModelImporterAnimationType.Human;
-            importer.avatarSetup = ModelImporterAvatarSetup.CopyFromOther;
-            importer.sourceAvatar = knightAvatar;
+            if (HasMixamoRig(path))
+            {
+                // 스킨 없이 받은 모션은 첫 프레임 자세로 아바타가 만들어져 팔다리가 틀어짐 → 기사 아바타 복사
+                importer.avatarSetup = ModelImporterAvatarSetup.CopyFromOther;
+                importer.sourceAvatar = knightAvatar;
+            }
+            else
+            {
+                // 뼈 이름에 "mixamorig:" 접두사가 없는 팩(Great Sword)은 기사 아바타와 뼈 경로가 달라 복사 불가
+                // → 파일에 들어 있는 캐릭터(스킨 포함, T포즈)로 아바타 생성
+                importer.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
+                importer.sourceAvatar = null;
+            }
+            // 캐릭터 메쉬가 같이 들어온 파일(T-pose로 받음)의 "normals 없음" 경고 방지
+            importer.importNormals = ModelImporterNormals.Calculate;
+            importer.importTangents = ModelImporterTangents.None; // 메쉬는 안 쓰므로 탄젠트 계산 생략 (경고 제거)
 
             string file = Path.GetFileNameWithoutExtension(path);
             string lower = file.ToLowerInvariant();
             bool loop = LoopKeywords.Any(lower.Contains) && !NoLoopKeywords.Any(lower.Contains);
-            bool locomotion = LocomotionKeywords.Any(lower.Contains);
+            // 이동 클립 + 보스 패턴 클립은 루트 이동량을 뽑아서 코드가 쓰게 함(포즈에 굽지 않음)
+            bool locomotion = LocomotionKeywords.Any(lower.Contains) || path.Contains("/Boss/Pattern/");
 
             ModelImporterClipAnimation[] clips = importer.clipAnimations.Length > 0
                 ? importer.clipAnimations
@@ -77,6 +96,12 @@ public static class MixamoClipSetup
 
         WriteReport(paths);
         Debug.Log($"[MixamoClipSetup] {paths.Length}개 FBX 설정 완료. 리포트: {ReportPath}");
+    }
+
+    private static bool HasMixamoRig(string path)
+    {
+        var root = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+        return root != null && root.GetComponentsInChildren<Transform>(true).Any(t => t.name == "mixamorig:Hips");
     }
 
     private static void WriteReport(string[] paths)

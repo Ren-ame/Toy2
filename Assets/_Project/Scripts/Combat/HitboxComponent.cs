@@ -14,6 +14,8 @@ public class HitboxComponent : MonoBehaviour
 
     private GameObject _owner;
 
+    private bool _isParryable;
+
     private void Awake()
     {
         _collider = GetComponent<Collider>();
@@ -23,8 +25,6 @@ public class HitboxComponent : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.gameObject.name);
-
         if (other.transform.root.gameObject == _owner) return;
 
         if (other.gameObject.TryGetComponent<IDamageable>(out IDamageable target))
@@ -32,18 +32,19 @@ public class HitboxComponent : MonoBehaviour
             if (_hitList.Contains(target) == false)
             {
                 _hitList.Add(target); 
-                DamageInfo damageInfo = new DamageInfo(_damage, 0, false, Vector3.zero, Vector3.zero, _owner);
+                DamageInfo damageInfo = new DamageInfo(_damage, 0, _isParryable, Vector3.zero, Vector3.zero, _owner);
                 DamageResult getDamage = target.TakeDamage(damageInfo);
                 OnHitResult?.Invoke(getDamage);
             }
         }
     }
 
-    public void Activate(float damage)
+    public void Activate(float damage, bool isParryable = true)
     {
         _hitList.Clear();
         _collider.enabled = true;
         _damage = damage;
+        _isParryable = isParryable;
     }
 
     public void Deactivate()

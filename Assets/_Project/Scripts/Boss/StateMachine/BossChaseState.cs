@@ -8,11 +8,13 @@ public class BossChaseState : BossState
 
     private const float MoveSpeed = 3.5f;
     private const float RotateSpeed = 360f;
-    private const float StopRange = 2.5f;
+
+    private bool _isWalking;
 
     public override void Enter()
     {
         Machine.Animator.CrossFade("Walk", 0.15f);
+        _isWalking = true;
     }
 
     public override void Tick(float deltaTime)
@@ -22,14 +24,31 @@ public class BossChaseState : BossState
 
         Machine.FaceTarget(RotateSpeed, deltaTime);
 
-        if (dir.sqrMagnitude > StopRange * StopRange)
+        if (dir.sqrMagnitude > Machine.AttackRange * Machine.AttackRange)
         {
             Machine.Controller.SimpleMove(dir.normalized * MoveSpeed);
+            
+            if (_isWalking == false)
+            {
+                Machine.Animator.CrossFade("Walk", 0.15f);
+                _isWalking = true;
+            }
         }
-
-        if (dir.sqrMagnitude <= StopRange * StopRange && Machine.CanAttack == true)
+        else
         {
-            Machine.ChangeState(new BossReadyState(Machine));
+            Machine.Controller.SimpleMove(Vector3.zero);
+
+            if (Machine.CanAttack == true)
+            {
+                Machine.ChangeState(new BossReadyState(Machine));
+                return;
+            }
+
+            if (_isWalking == true)
+            {
+                Machine.Animator.CrossFade("Idle", 0.15f);
+                _isWalking = false;
+            }
         }
     }
 }

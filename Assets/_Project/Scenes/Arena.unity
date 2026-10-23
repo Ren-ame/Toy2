@@ -2030,7 +2030,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0.10756753, y: -0.6988773, z: 0.107567556, w: 0.69887704}
-  m_LocalPosition: {x: 14.768585, y: 3.303529, z: 0.00000040978193}
+  m_LocalPosition: {x: 14.768585, y: 4.2035294, z: 0.00000040978193}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2905,6 +2905,9 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 456627628079135499, guid: 0186165c7862b8442947ca7c23d3f38a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1759996903}
     - targetCorrespondingSourceObject: {fileID: 6284539842013259635, guid: 0186165c7862b8442947ca7c23d3f38a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 942086509}
@@ -3665,6 +3668,11 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.0414515, y: -0.22983146, z: 0.06256944}
     m_Extent: {x: 0.37304997, y: 0.29973918, z: 0.27693576}
   m_DirtyAABB: 0
+--- !u!4 &641889107 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 456627628079135499, guid: 0186165c7862b8442947ca7c23d3f38a, type: 3}
+  m_PrefabInstance: {fileID: 440515466}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &654785486
 GameObject:
   m_ObjectHideFlags: 0
@@ -4313,8 +4321,8 @@ Transform:
   m_GameObject: {fileID: 799241898}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 10, y: 1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 10, y: 1.5, z: 0}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 12402138}
@@ -5442,7 +5450,7 @@ Transform:
   m_GameObject: {fileID: 1006350268}
   serializedVersion: 2
   m_LocalRotation: {x: 0.15212347, y: -0.000000084293696, z: 0.000000010536712, w: 0.9883615}
-  m_LocalPosition: {x: -0.00000006705517, y: 2.303529, z: -4.7685857}
+  m_LocalPosition: {x: -0.000000044703448, y: 1.8023529, z: -3.1790571}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7949,7 +7957,7 @@ GameObject:
   - component: {fileID: 1555470709}
   - component: {fileID: 1555470708}
   m_Layer: 0
-  m_Name: Hitbox
+  m_Name: SwordHitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7965,7 +7973,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.41000113, y: 1.4552194, z: 0.3662}
+  m_LocalScale: {x: 0.86, y: 1.5, z: 0.77}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1230880959}
@@ -8001,7 +8009,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.5, y: 1, z: 0.5}
+  m_Size: {x: 0.75, y: 1.25, z: 0.75}
   m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!54 &1555470710
 Rigidbody:
@@ -8661,9 +8669,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b87b2b27cffb9af4087569a54053f6f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossStateMachine
+  _swordHitbox: {fileID: 1555470708}
+  _footHitbox: {fileID: 1759996904}
   _headRenderer: {fileID: 1480536056}
   _canAttack: 1
   _eyeLight: {fileID: 942086511}
+  _patterns:
+  - {fileID: 11400000, guid: 2c261c7a7e9cf1e4f8a559c1cc5a93b9, type: 2}
+  - {fileID: 11400000, guid: 09f0ed67622344478dd83c0368fff5da, type: 2}
+  - {fileID: 11400000, guid: 7e18feb6982f43cea66f56e0600b176f, type: 2}
+  - {fileID: 11400000, guid: 47fa11efdb2f413d8b9ecf43940c1eab, type: 2}
+  _readyTime: []
+  _attackRange: 10
 --- !u!143 &1694821132
 CharacterController:
   m_ObjectHideFlags: 0
@@ -8857,6 +8874,100 @@ Transform:
   - {fileID: 1382574817}
   m_Father: {fileID: 570412518}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1759996902
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1759996903}
+  - component: {fileID: 1759996906}
+  - component: {fileID: 1759996905}
+  - component: {fileID: 1759996904}
+  m_Layer: 0
+  m_Name: FootHitbox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1759996903
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1759996902}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 641889107}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1759996904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1759996902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9ff2a0caac85c14599ce30990089dbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitboxComponent
+--- !u!65 &1759996905
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1759996902}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.8, y: 0.5, z: 0.6}
+  m_Center: {x: -0.2, y: 0, z: 0}
+--- !u!54 &1759996906
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1759996902}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1772409791
 GameObject:
   m_ObjectHideFlags: 0

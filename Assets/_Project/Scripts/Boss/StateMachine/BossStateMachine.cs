@@ -1,5 +1,4 @@
-using System;
-using Unity.VisualScripting;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BossStateMachine : MonoBehaviour
@@ -8,8 +7,13 @@ public class BossStateMachine : MonoBehaviour
 
     public Transform Target { get; private set; }
     public CharacterController Controller { get; private set; }
-    public HitboxComponent Hitbox { get; private set; }
     public Animator Animator { get; private set; }
+    public Vector3 RootMotionDelta { get; private set; }
+
+    [SerializeField] private HitboxComponent _swordHitbox;
+    public HitboxComponent SwordHitbox => _swordHitbox;
+    [SerializeField] private HitboxComponent _footHitbox;
+    public HitboxComponent FootHitbox => _footHitbox;
 
     [SerializeField] private Renderer _headRenderer;
     private Material _eyeMaterial;
@@ -19,13 +23,21 @@ public class BossStateMachine : MonoBehaviour
 
     [SerializeField] private Light _eyeLight;
 
+    [SerializeField] private BossPattern[] _patterns;
+    public BossPattern[] Patterns => _patterns;
+
+    [SerializeField] private float[] _readyTime;
+
+    [SerializeField] private float _attackRange = 5f;
+    public float AttackRange => _attackRange;
+
     private void Awake()
     {
         Target = GameObject.FindWithTag("Player").transform;
         Controller = GetComponent<CharacterController>();
-        Hitbox = GetComponentInChildren<HitboxComponent>();
         Animator = GetComponentInChildren<Animator>();
         _eyeMaterial = _headRenderer.material;
+        _readyTime = new float[_patterns.Length];
         SetEyeGlow(false);
     }
 
@@ -67,12 +79,12 @@ public class BossStateMachine : MonoBehaviour
 
     private void OnEnable()
     {
-        Hitbox.OnHitResult += HandleHitResult;
+        SwordHitbox.OnHitResult += HandleHitResult;
     }
 
     private void OnDisable()
     {
-        Hitbox.OnHitResult -= HandleHitResult;
+        SwordHitbox.OnHitResult -= HandleHitResult;
     }
 
     private void HandleHitResult(DamageResult result)
@@ -83,14 +95,36 @@ public class BossStateMachine : MonoBehaviour
         }
     }
 
-    public void HandleAnimationEvent(string eventName)
+    public void HandleAnimationEvent(string eventName, int index)
     {
-        _currentState?.OnAnimationEvent(eventName);
+        _currentState?.OnAnimationEvent(eventName, index);
     }
 
     public void SetEyeGlow(bool on)
     {
         _eyeMaterial.SetFloat("_Emission", on ? 1f : 0f);
         _eyeLight.enabled = on;
+    }
+
+    public void SetRootMotion(Vector3 delta)
+    {
+        RootMotionDelta = delta;
+    }
+
+    public BossPattern PickPattern()
+    {
+        List<int> candidates = new List<int>();
+
+        for (int i = 0; i < _patterns.Length; i++)
+        {
+            if (Time.time >= _readyTime[i])
+            {
+                candidates.Add(i);
+            }
+        }
+
+        int pick = candidates[Random.Range(0, candidates.Count)];
+        _readyTime[pick] = Time.time + _patterns[pick].Cooldown;
+        return _patterns[pick];
     }
 }
