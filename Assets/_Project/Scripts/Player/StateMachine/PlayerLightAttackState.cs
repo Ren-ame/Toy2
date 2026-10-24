@@ -15,7 +15,7 @@ public class PlayerLightAttackState : PlayerState
     private bool _comboBuffer;
     private bool _comboWindowOpen;
     private int _comboCount;
-    private float[] _comboDamage = { 12f, 12f, 18f };
+    private float[] _comboDamageRatio = { 1.2f, 1.2f, 1.8f };
     private string[] _comboAnimations = { "Attack1", "Attack2", "Attack3" };
 
     public const float LightStaminaCost = 15f;
@@ -124,7 +124,7 @@ public class PlayerLightAttackState : PlayerState
             case "HitboxOn":
                 if (_hitboxState == HitboxState.Waiting)
                 {
-                    Machine.Hitbox.Activate(_comboDamage[_comboCount]);
+                    Machine.Hitbox.Activate(Machine.Atk * _comboDamageRatio[_comboCount]);
                     _hitboxState = HitboxState.Active;
                 }
                 break;
