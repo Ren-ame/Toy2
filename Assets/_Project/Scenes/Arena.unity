@@ -24015,6 +24015,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d93c9fd42f54d5745a0a57418d38e0a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStateMachine
+  _atk: 10
 --- !u!114 &799241908
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -50555,6 +50556,7 @@ GameObject:
   - component: {fileID: 1694821128}
   - component: {fileID: 1694821132}
   - component: {fileID: 1694821130}
+  - component: {fileID: 1694821133}
   - component: {fileID: 1694821129}
   - component: {fileID: 1694821131}
   m_Layer: 6
@@ -50630,6 +50632,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 47fa11efdb2f413d8b9ecf43940c1eab, type: 2}
   _readyTime: []
   _attackRange: 10
+  _poise: {fileID: 1694821133}
+  _parryPoiseDamage: 30
 --- !u!143 &1694821132
 CharacterController:
   m_ObjectHideFlags: 0
@@ -50655,6 +50659,21 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1694821133
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1694821124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abec53d1ffcd1224cba69754f3d23238, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PoiseComponent
+  _maxPoise: 100
+  _recoveryDelay: 3
+  _recoveryPerSecond: 10
 --- !u!1001 &1695226852
 PrefabInstance:
   m_ObjectHideFlags: 0

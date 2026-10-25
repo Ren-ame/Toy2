@@ -31,6 +31,9 @@ public class BossStateMachine : MonoBehaviour
     [SerializeField] private float _attackRange = 5f;
     public float AttackRange => _attackRange;
 
+    public PoiseComponent Poise { get; private set; }
+    [SerializeField] private float _parryPoiseDamage = 30f;
+
     private void Awake()
     {
         Target = GameObject.FindWithTag("Player").transform;
@@ -38,6 +41,7 @@ public class BossStateMachine : MonoBehaviour
         Animator = GetComponentInChildren<Animator>();
         _eyeMaterial = _headRenderer.material;
         _readyTime = new float[_patterns.Length];
+        Poise = GetComponent<PoiseComponent>();
         SetEyeGlow(false);
     }
 
@@ -80,19 +84,27 @@ public class BossStateMachine : MonoBehaviour
     private void OnEnable()
     {
         SwordHitbox.OnHitResult += HandleHitResult;
+        Poise.OnBroken += HandlePoiseBroken;
     }
 
     private void OnDisable()
     {
         SwordHitbox.OnHitResult -= HandleHitResult;
+        Poise.OnBroken -= HandlePoiseBroken;
     }
 
     private void HandleHitResult(DamageResult result)
     {
         if (result == DamageResult.Parried)
         {
+            Poise.Add(_parryPoiseDamage);
             ChangeState(new BossStaggerState(this));
         }
+    }
+
+    private void HandlePoiseBroken()
+    {
+        Debug.Log("체간 붕괴");
     }
 
     public void HandleAnimationEvent(string eventName, int index)
