@@ -7,6 +7,9 @@ public class HitboxComponent : MonoBehaviour
     private Collider _collider;
 
     private float _damage;
+    private float _poiseDamage;
+    private bool _isParryable;
+    private bool _isHeavyAttack;
 
     private HashSet<IDamageable> _hitList = new HashSet<IDamageable>();
 
@@ -14,7 +17,6 @@ public class HitboxComponent : MonoBehaviour
 
     private GameObject _owner;
 
-    private bool _isParryable;
 
     private void Awake()
     {
@@ -32,19 +34,21 @@ public class HitboxComponent : MonoBehaviour
             if (_hitList.Contains(target) == false)
             {
                 _hitList.Add(target); 
-                DamageInfo damageInfo = new DamageInfo(_damage, 0, _isParryable, Vector3.zero, Vector3.zero, _owner);
+                DamageInfo damageInfo = new DamageInfo(_damage, _poiseDamage, _isParryable, _isHeavyAttack, Vector3.zero, Vector3.zero, _owner);
                 DamageResult getDamage = target.TakeDamage(damageInfo);
                 OnHitResult?.Invoke(getDamage);
             }
         }
     }
 
-    public void Activate(float damage, bool isParryable = true)
+    public void Activate(float damage, bool isParryable = true, float poiseDamage = 0f, bool isHeavyAttack = false)
     {
         _hitList.Clear();
         _collider.enabled = true;
         _damage = damage;
+        _poiseDamage = poiseDamage;
         _isParryable = isParryable;
+        _isHeavyAttack = isHeavyAttack;
     }
 
     public void Deactivate()
