@@ -50,19 +50,36 @@ public static class BossAnimatorSetup
             AnimatorState state = sm.states.Select(s => s.state).FirstOrDefault(s => s.name == stateName);
             if (state == null)
             {
-                // 패턴별로 한 줄씩 배치 (Single은 맨 위)
-                int row = stateName == "Attack1" ? 0 : stateName[1] - '0';
-                int col = stateName == "Attack1" ? 0 : CountBefore(stateName, i);
-                state = sm.AddState(stateName, new Vector3(250f + col * 210f, 400f + row * 70f, 0f));
+                state = sm.AddState(stateName, GridPosition(stateName, i));
                 added++;
             }
             else updated++;
             state.motion = clip;
         }
 
+        // 화면 밖(이전 버전 버그로 y=5020 등)에 놓인 상태는 제자리로 옮김
+        ChildAnimatorState[] children = sm.states;
+        for (int c = 0; c < children.Length; c++)
+        {
+            int idx = System.Array.FindIndex(States, s => s.state == children[c].state.name);
+            if (idx >= 0 && children[c].position.y > 2000f) children[c].position = GridPosition(States[idx].state, idx);
+        }
+        sm.states = children;
+
         EditorUtility.SetDirty(controller);
         AssetDatabase.SaveAssets();
         Debug.Log($"[BossAnimatorSetup] 상태 추가 {added}개, 클립 재연결 {updated}개");
+    }
+
+    // 패턴 상태(P1_~P3_)는 패턴별로 한 줄씩, Attack1은 맨 위 줄, 그 밖(Groggy 등)은 Stagger·Dead 아래 열
+    private static Vector3 GridPosition(string stateName, int index)
+    {
+        if (stateName == "Attack1") return new Vector3(250f, 400f, 0f);
+        bool isPattern = stateName.Length > 3 && stateName[0] == 'P' && char.IsDigit(stateName[1]) && stateName[2] == '_';
+        if (isPattern)
+            return new Vector3(250f + CountBefore(stateName, index) * 210f, 400f + (stateName[1] - '0') * 70f, 0f);
+        int misc = States.Take(index).Count(s => !(s.state.Length > 3 && s.state[0] == 'P' && char.IsDigit(s.state[1])) && s.state != "Attack1");
+        return new Vector3(10f, 400f + misc * 60f, 0f);
     }
 
     // 같은 패턴(P1_, P2_ ...) 안에서 몇 번째인지

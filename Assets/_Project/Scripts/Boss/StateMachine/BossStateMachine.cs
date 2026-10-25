@@ -9,6 +9,8 @@ public class BossStateMachine : MonoBehaviour
     public CharacterController Controller { get; private set; }
     public Animator Animator { get; private set; }
     public Vector3 RootMotionDelta { get; private set; }
+    public PoiseComponent Poise { get; private set; }
+    public bool IsGroggy { get; set; }
 
     [SerializeField] private HitboxComponent _swordHitbox;
     public HitboxComponent SwordHitbox => _swordHitbox;
@@ -31,7 +33,6 @@ public class BossStateMachine : MonoBehaviour
     [SerializeField] private float _attackRange = 5f;
     public float AttackRange => _attackRange;
 
-    public PoiseComponent Poise { get; private set; }
     [SerializeField] private float _parryPoiseDamage = 30f;
 
     private void Awake()
@@ -98,6 +99,8 @@ public class BossStateMachine : MonoBehaviour
         if (result == DamageResult.Parried)
         {
             Poise.Add(_parryPoiseDamage);
+            if (Poise.IsBroken)
+                return;
             ChangeState(new BossStaggerState(this));
         }
     }
@@ -105,6 +108,7 @@ public class BossStateMachine : MonoBehaviour
     private void HandlePoiseBroken()
     {
         Debug.Log("체간 붕괴");
+        ChangeState(new BossGroggyState(this));
     }
 
     public void HandleAnimationEvent(string eventName, int index)
