@@ -13,6 +13,7 @@ public static class MixamoClipSetup
         "Assets/_Project/Animations/Player/Pro Sword and Shield Pack",
         "Assets/_Project/Animations/Boss/Great Sword Pack",
         "Assets/_Project/Animations/Boss/Pattern/P3_GreatSword",
+        "Assets/_Project/Animations/Boss/Groggy",
     };
     private const string ReportPath = "Library/MixamoClipReport.txt";
     // 기사 모델(스킨 포함, T포즈 기준) — 모든 Mixamo 모션이 이 아바타를 공유하도록

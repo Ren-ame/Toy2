@@ -28,6 +28,8 @@ public static class BossAnimatorSetup
         ("P3_Kick",   P + "P3_GreatSword/great sword kick.fbx"),
         ("P3_Strafe", P + "P3_GreatSword/great sword strafe.fbx"),
         ("P3_Spin",   P + "P3_GreatSword/great sword high spin attack.fbx"),
+
+        ("Groggy",    "Assets/_Project/Animations/Boss/Groggy/Kneeling_Idle.fbx"),   // 체간 붕괴: 한쪽 무릎 꿇고 대기(반복)
     };
 
     [MenuItem("Tools/Boss/Setup Pattern States")]
