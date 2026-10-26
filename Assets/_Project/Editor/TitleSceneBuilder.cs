@@ -243,6 +243,277 @@ public static class TitleSceneBuilder
         return null;
     }
 
+    // ---------------------------------------------------------------- 조작 안내 (Arena)
+    // 화면 오른쪽 아래 반투명 박스. 코드 없이 항상 표시 (보스 HP 바와 안 겹치는 위치)
+    private static readonly string[] Controls =
+    {
+        "WASD|이동", "마우스|시점", "좌클릭|공격  (길게: 강공격)", "우클릭|패링  (길게: 가드)",
+        "Shift|구르기", "Tab|락온", "R|다시 도전 (결과 화면)",
+    };
+
+    [MenuItem("Tools/UI/Add Controls Guide")]
+    private static void AddControlsGuide()
+    {
+        Scene scene = SceneManager.GetActiveScene();
+        Transform canvas = FindDeep(scene, "UI Canvas");
+        if (canvas == null) { Debug.LogError("[Title] UI Canvas를 찾지 못함 — Arena 씬을 열고 실행하세요"); return; }
+
+        Transform old = canvas.Find("ControlsGuide");
+        if (old != null) Undo.DestroyObjectImmediate(old.gameObject);
+
+        RectTransform box = Rect("ControlsGuide", canvas, new Vector2(1, 0), new Vector2(1, 0), new Vector2(1, 0),
+                                 new Vector2(-30, 30), new Vector2(380, 40 + Controls.Length * 34));
+        Undo.RegisterCreatedObjectUndo(box.gameObject, "Controls Guide");
+        var bg = box.gameObject.AddComponent<Image>();
+        bg.color = new Color(0f, 0f, 0f, 0.35f);
+        bg.raycastTarget = false;
+
+        // 키 이름은 금색, 설명은 흰색 (TMP 리치 텍스트)
+        var sb = new System.Text.StringBuilder();
+        foreach (string c in Controls)
+        {
+            string[] kv = c.Split('|');
+            sb.AppendLine($"<color=#F2DB9E><b>{kv[0]}</b></color><pos=32%>{kv[1]}");
+        }
+        TextMeshProUGUI tmp = Text(box, "Text", sb.ToString().TrimEnd(), KoreanFont(false), 22, Paper,
+                                   new Vector2(0.5f, 0.5f), new Vector2(340, Controls.Length * 34), 0f);
+        tmp.alignment = TextAlignmentOptions.Left;
+        tmp.lineSpacing = 18f;
+        tmp.richText = true;
+
+        EditorSceneManager.MarkSceneDirty(scene);
+        Debug.Log("[Title] 조작 안내 추가 완료");
+    }
+
+    // ---------------------------------------------------------------- 조작법 화면 (Arena)
+    // Arena 시작 시 조작법 화면(키캡·마우스 그림) → Space로 닫고 전투 시작
+    // 처음엔 숨김(alpha 0). 보여 주고 숨기고 게임을 멈추는 건 런타임 스크립트가 담당
+    private const string UiDir = "Assets/_Project/UI/Controls/";
+    private static readonly Color KeyText = new Color(0.16f, 0.14f, 0.12f);
+
+    [MenuItem("Tools/UI/Add Controls Screen")]
+    private static void AddControlsScreen()
+    {
+        Scene scene = SceneManager.GetActiveScene();
+        Transform canvas = FindDeep(scene, "UI Canvas");
+        if (canvas == null) { Debug.LogError("[Title] UI Canvas를 찾지 못함 — Arena 씬을 열고 실행하세요"); return; }
+
+        Sprite key = UiSprite("UI_Keycap.png", new Vector4(24, 30, 24, 24));
+        Sprite card = UiSprite("UI_Card.png", new Vector4(44, 44, 44, 44));
+        Sprite frame = UiSprite("UI_ButtonFrame.png", new Vector4(24, 24, 24, 24));
+        Sprite mouse = UiSprite("UI_Mouse.png", Vector4.zero);
+        TMP_FontAsset kr = KoreanFont(false), krBold = KoreanFont(true);
+
+        Transform old = canvas.Find("ControlsGroup");
+        if (old != null) Undo.DestroyObjectImmediate(old.gameObject);
+
+        RectTransform root = Stretch("ControlsGroup", canvas);
+        Undo.RegisterCreatedObjectUndo(root.gameObject, "Controls Screen");
+        root.SetAsLastSibling();   // HUD·결과 화면보다 위에 그려지게
+        var group = root.gameObject.AddComponent<CanvasGroup>();
+        group.alpha = 0f; group.interactable = false; group.blocksRaycasts = false;
+        var dim = root.gameObject.AddComponent<Image>();
+        dim.color = new Color(0f, 0f, 0f, 0.88f);
+
+        Text(root, "Header", "조작법", krBold, 56, Paper, new Vector2(0.5f, 0.9f), new Vector2(600, 80), 12f);
+
+        // ---- 왼쪽 카드: 이동·회피
+        RectTransform left = Card(root, "MoveCard", card, new Vector2(0.3f, 0.52f), new Vector2(660, 600));
+        Label(left, "이동", krBold);
+        Key(left, key, krBold, "W", new Vector2(0, 150), 96);
+        Key(left, key, krBold, "A", new Vector2(-110, 40), 96);
+        Key(left, key, krBold, "S", new Vector2(0, 40), 96);
+        Key(left, key, krBold, "D", new Vector2(110, 40), 96);
+        Arrow(left, kr, "▲", new Vector2(0, 220)); Arrow(left, kr, "▼", new Vector2(0, -24));
+        Arrow(left, kr, "◀", new Vector2(-180, 46)); Arrow(left, kr, "▶", new Vector2(180, 46));
+        Label(left, "회피", krBold, -88);
+        Key(left, key, krBold, "Shift", new Vector2(-110, -150), 200, 84, 30);
+        Caption(left, kr, "구르기", new Vector2(-110, -215));
+        Key(left, key, krBold, "Tab", new Vector2(130, -150), 140, 84, 30);
+        Caption(left, kr, "락온", new Vector2(130, -215));
+
+        // ---- 오른쪽 카드: 전투(마우스)
+        RectTransform right = Card(root, "CombatCard", card, new Vector2(0.7f, 0.52f), new Vector2(660, 600));
+        Label(right, "전투", krBold);
+        RectTransform m = Rect("Mouse", right, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
+                               new Vector2(0, 20), new Vector2(170, 255));
+        var mi = m.gameObject.AddComponent<Image>(); mi.sprite = mouse; mi.preserveAspect = true; mi.raycastTarget = false;
+        Desc(right, krBold, kr, "좌클릭", "공격\n<size=80%>길게 누르면 강공격</size>", new Vector2(-200, 90), TextAlignmentOptions.Right);
+        Desc(right, krBold, kr, "우클릭", "패링\n<size=80%>길게 누르면 가드</size>", new Vector2(200, 90), TextAlignmentOptions.Left);
+        // 공략 팁: 패링 신호 → 체간 → 그로기 중 강공격 치명타 (핵심 단어만 금색)
+        const string g = "<color=#F2DB9E>", e = "</color>";
+        string tips = $"{g}눈이 빛나는 공격{e}은 패링할 수 있다\n" +
+                      $"패링·공격으로 {g}체간{e}을 채우면 보스가 무릎을 꿇는다\n" +
+                      $"무릎 꿇은 보스에게 {g}강공격{e}은 치명타";
+        TextMeshProUGUI tip = Text(right, "Tips", tips, kr, 23, Paper, new Vector2(0.5f, 0.5f), new Vector2(620, 140), 0f);
+        tip.richText = true;
+        tip.lineSpacing = 20f;
+        ((RectTransform)tip.transform).anchoredPosition = new Vector2(0, -205);
+
+        // ---- 시작 안내 (버튼 모양이지만 클릭이 아니라 Space로 닫음 — 전투 중 커서가 잠겨 있으므로)
+        RectTransform btn = Rect("StartHint", root, new Vector2(0.5f, 0.1f), new Vector2(0.5f, 0.1f), new Vector2(0.5f, 0.5f),
+                                 Vector2.zero, new Vector2(420, 80));
+        var bi = btn.gameObject.AddComponent<Image>(); bi.sprite = frame; bi.type = Image.Type.Sliced; bi.raycastTarget = false;
+        Text(btn, "Label", "Space  전투 시작", krBold, 34, KeyText, new Vector2(0.5f, 0.5f), new Vector2(420, 80), 6f);
+
+        EditorSceneManager.MarkSceneDirty(scene);
+        Debug.Log("[Title] 조작법 화면 추가 완료 (ControlsGroup, 처음엔 숨김)");
+    }
+
+    private static Sprite UiSprite(string file, Vector4 border)
+    {
+        string path = UiDir + file;
+        if (AssetImporter.GetAtPath(path) is TextureImporter ti)
+        {
+            ti.textureType = TextureImporterType.Sprite;
+            ti.spriteImportMode = SpriteImportMode.Single;
+            ti.spriteBorder = border;                  // 9-slice: 모서리는 그대로, 가운데만 늘어남
+            ti.alphaIsTransparency = true;
+            ti.mipmapEnabled = false;
+            ti.SaveAndReimport();
+        }
+        return AssetDatabase.LoadAssetAtPath<Sprite>(path);
+    }
+
+    private static RectTransform Card(Transform parent, string name, Sprite sprite, Vector2 anchor, Vector2 size)
+    {
+        RectTransform rt = Rect(name, parent, anchor, anchor, new Vector2(0.5f, 0.5f), Vector2.zero, size);
+        var img = rt.gameObject.AddComponent<Image>(); img.sprite = sprite; img.type = Image.Type.Sliced; img.raycastTarget = false;
+        return rt;
+    }
+
+    private static void Label(RectTransform card, string text, TMP_FontAsset font, float y = 230f)
+    {
+        TextMeshProUGUI t = Text(card, "Label_" + text, text, font, 40, Gold, new Vector2(0.5f, 0.5f), new Vector2(200, 60), 4f);
+        t.alignment = TextAlignmentOptions.Left;
+        ((RectTransform)t.transform).anchoredPosition = new Vector2(-210, y);
+    }
+
+    private static void Key(RectTransform parent, Sprite sprite, TMP_FontAsset font, string label, Vector2 pos,
+                            float w, float h = 96f, float fontSize = 40f)
+    {
+        RectTransform k = Rect("Key_" + label, parent, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), pos, new Vector2(w, h));
+        var img = k.gameObject.AddComponent<Image>(); img.sprite = sprite; img.type = Image.Type.Sliced; img.raycastTarget = false;
+        TextMeshProUGUI t = Text(k, "Label", label, font, fontSize, KeyText, new Vector2(0.5f, 0.5f), new Vector2(w, h), 0f);
+        ((RectTransform)t.transform).anchoredPosition = new Vector2(0, 4);   // 윗면 중앙 (아래 그림자 10px 보정)
+    }
+
+    private static void Arrow(RectTransform parent, TMP_FontAsset font, string glyph, Vector2 pos)
+    {
+        TextMeshProUGUI t = Text(parent, "Arrow", glyph, font, 22, Gold, new Vector2(0.5f, 0.5f), new Vector2(40, 40), 0f);
+        ((RectTransform)t.transform).anchoredPosition = pos;
+    }
+
+    private static void Caption(RectTransform parent, TMP_FontAsset font, string text, Vector2 pos)
+    {
+        TextMeshProUGUI t = Text(parent, "Caption", text, font, 24, Paper, new Vector2(0.5f, 0.5f), new Vector2(240, 36), 2f);
+        ((RectTransform)t.transform).anchoredPosition = pos;
+    }
+
+    private static void Desc(RectTransform parent, TMP_FontAsset bold, TMP_FontAsset font, string title, string body, Vector2 pos,
+                             TextAlignmentOptions align)
+    {
+        TextMeshProUGUI h = Text(parent, "Desc_" + title, title, bold, 30, Gold, new Vector2(0.5f, 0.5f), new Vector2(200, 40), 2f);
+        h.alignment = align;
+        ((RectTransform)h.transform).anchoredPosition = pos;
+        TextMeshProUGUI d = Text(parent, "Body_" + title, body, font, 28, Paper, new Vector2(0.5f, 0.5f), new Vector2(200, 90), 0f);
+        d.alignment = align;
+        d.richText = true;
+        ((RectTransform)d.transform).anchoredPosition = pos + new Vector2(0, -62);
+    }
+
+    // ---------------------------------------------------------------- 일시정지 메뉴 (Arena)
+    // Esc → 일시정지 창: 마우스 감도 슬라이더 + 계속하기 / 타이틀로 / 게임 종료. 처음엔 숨김(alpha 0)
+    // 열고 닫기·감도 저장/적용은 런타임 스크립트(PauseMenu)가 담당
+    [MenuItem("Tools/UI/Add Pause Menu")]
+    private static void AddPauseMenu()
+    {
+        Scene scene = SceneManager.GetActiveScene();
+        Transform canvas = FindDeep(scene, "UI Canvas");
+        if (canvas == null) { Debug.LogError("[Title] UI Canvas를 찾지 못함 — Arena 씬을 열고 실행하세요"); return; }
+
+        Sprite card = UiSprite("UI_Card.png", new Vector4(44, 44, 44, 44));
+        Sprite frame = UiSprite("UI_ButtonFrame.png", new Vector4(24, 24, 24, 24));
+        Sprite key = UiSprite("UI_Keycap.png", new Vector4(24, 30, 24, 24));
+        TMP_FontAsset kr = KoreanFont(false), krBold = KoreanFont(true);
+
+        Transform old = canvas.Find("PauseGroup");
+        if (old != null) Undo.DestroyObjectImmediate(old.gameObject);
+
+        RectTransform root = Stretch("PauseGroup", canvas);
+        Undo.RegisterCreatedObjectUndo(root.gameObject, "Pause Menu");
+        root.SetAsLastSibling();
+        var group = root.gameObject.AddComponent<CanvasGroup>();
+        group.alpha = 0f; group.interactable = false; group.blocksRaycasts = false;
+        var dim = root.gameObject.AddComponent<Image>();
+        dim.color = new Color(0f, 0f, 0f, 0.7f);
+
+        RectTransform panel = Card(root, "Panel", card, new Vector2(0.5f, 0.5f), new Vector2(640, 680));
+        TextMeshProUGUI header = Text(panel, "Header", "일시정지", krBold, 48, Paper, new Vector2(0.5f, 0.5f), new Vector2(400, 70), 10f);
+        ((RectTransform)header.transform).anchoredPosition = new Vector2(0, 270);
+
+        // ---- 마우스 감도: 좌우(X) / 상하(Y) 각각 라벨 + 현재 값 + 슬라이더
+        SensitivityRow(panel, key, kr, krBold, "X", "좌우 감도", 190);
+        SensitivityRow(panel, key, kr, krBold, "Y", "상하 감도", 90);
+
+        // ---- 버튼 3개
+        MenuButton(panel, frame, krBold, "ResumeButton", "계속하기", new Vector2(0, -50));
+        MenuButton(panel, frame, krBold, "TitleButton", "타이틀로", new Vector2(0, -140));
+        MenuButton(panel, frame, krBold, "QuitButton", "게임 종료", new Vector2(0, -230));
+
+        EditorSceneManager.MarkSceneDirty(scene);
+        Debug.Log("[Title] 일시정지 메뉴 추가 완료 (PauseGroup, 처음엔 숨김)");
+    }
+
+    private static void SensitivityRow(RectTransform panel, Sprite handle, TMP_FontAsset font, TMP_FontAsset bold,
+                                       string axis, string title, float y)
+    {
+        TextMeshProUGUI label = Text(panel, $"Sensitivity{axis}_Label", title, font, 30, Gold, new Vector2(0.5f, 0.5f), new Vector2(240, 44), 2f);
+        label.alignment = TextAlignmentOptions.Left;
+        ((RectTransform)label.transform).anchoredPosition = new Vector2(-130, y);
+        TextMeshProUGUI value = Text(panel, $"Sensitivity{axis}_Value", "1.0", bold, 30, Paper, new Vector2(0.5f, 0.5f), new Vector2(120, 44), 0f);
+        value.alignment = TextAlignmentOptions.Right;
+        ((RectTransform)value.transform).anchoredPosition = new Vector2(190, y);
+        BuildSlider(panel, handle, $"Sensitivity{axis}_Slider", new Vector2(0, y - 50), new Vector2(500, 28));
+    }
+
+    private static void BuildSlider(RectTransform parent, Sprite handleSprite, string name, Vector2 pos, Vector2 size)
+    {
+        RectTransform rt = Rect(name, parent, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), pos, size);
+        var slider = rt.gameObject.AddComponent<Slider>();
+
+        RectTransform bg = Rect("Background", rt, new Vector2(0, 0.25f), new Vector2(1, 0.75f), new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero);
+        bg.gameObject.AddComponent<Image>().color = new Color(1f, 1f, 1f, 0.15f);
+
+        RectTransform fillArea = Rect("Fill Area", rt, new Vector2(0, 0.25f), new Vector2(1, 0.75f), new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero);
+        RectTransform fill = Rect("Fill", fillArea, Vector2.zero, new Vector2(0, 1), new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero);
+        fill.gameObject.AddComponent<Image>().color = Gold;
+
+        RectTransform handleArea = Rect("Handle Slide Area", rt, Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(-20, 0));
+        RectTransform handle = Rect("Handle", handleArea, Vector2.zero, new Vector2(0, 1), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(24, 16));
+        var hImg = handle.gameObject.AddComponent<Image>(); hImg.sprite = handleSprite; hImg.type = Image.Type.Sliced;
+
+        slider.fillRect = fill;
+        slider.handleRect = handle;
+        slider.targetGraphic = hImg;
+        slider.direction = Slider.Direction.LeftToRight;
+        slider.minValue = 0.2f;     // 감도 배율 (기본 Gain × 이 값)
+        slider.maxValue = 3f;
+        slider.value = 1f;
+    }
+
+    private static void MenuButton(RectTransform parent, Sprite frame, TMP_FontAsset font, string name, string label, Vector2 pos)
+    {
+        RectTransform rt = Rect(name, parent, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), pos, new Vector2(360, 72));
+        var img = rt.gameObject.AddComponent<Image>(); img.sprite = frame; img.type = Image.Type.Sliced;
+        var b = rt.gameObject.AddComponent<Button>();
+        ColorBlock cb = b.colors;
+        cb.highlightedColor = new Color(1f, 0.92f, 0.75f);
+        cb.pressedColor = new Color(0.85f, 0.75f, 0.55f);
+        b.colors = cb;
+        Text(rt, "Label", label, font, 32, KeyText, new Vector2(0.5f, 0.5f), new Vector2(360, 72), 6f);
+    }
+
     // ---------------------------------------------------------------- UI 도우미
     private static RectTransform Rect(string name, Transform parent, Vector2 aMin, Vector2 aMax, Vector2 pivot, Vector2 pos, Vector2 size)
     {
