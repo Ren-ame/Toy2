@@ -13900,6 +13900,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bbcc92ce1e49734fb9f0aefe7538537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TitleMenu
+  _startButton: {fileID: 498046618}
+  _quitButton: {fileID: 1949152756}
+  _gameScene: Arena
 --- !u!1001 &590719634
 PrefabInstance:
   m_ObjectHideFlags: 0
