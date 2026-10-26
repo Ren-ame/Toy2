@@ -17,4 +17,8 @@ public class BossPattern : ScriptableObject
 
     [SerializeField] private float _cooldown;
     public float Cooldown => _cooldown;
+
+    [SerializeField] private float _recoveryMin;
+    [SerializeField] private float _recoveryMax;
+    public float RandomRecovery => Random.Range(_recoveryMin, _recoveryMax);
 }

@@ -83,7 +83,7 @@ public class BossComboState : BossState
                 {
                     PlaySegment(_segmentIndex + 1);
                 }
-                else Machine.ChangeState(new BossChaseState(Machine));
+                else Machine.ChangeState(new BossRecoverState(Machine, _pattern.RandomRecovery));
                 break;
         }
     }

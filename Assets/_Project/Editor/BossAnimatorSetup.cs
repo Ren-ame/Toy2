@@ -9,6 +9,7 @@ public static class BossAnimatorSetup
 {
     private const string ControllerPath = "Assets/_Project/Animations/Boss/BossAnimator.controller";
     private const string P = "Assets/_Project/Animations/Boss/Pattern/";
+    private const string D = "Assets/_Project/Animations/Boss/DoubleL/Demo/Anim/";
 
     // (상태 이름, 클립 경로) — 상태 이름은 BossPattern 에셋의 StateName과 같아야 한다
     private static readonly (string state, string clip)[] States =
@@ -30,6 +31,12 @@ public static class BossAnimatorSetup
         ("P3_Spin",   P + "P3_GreatSword/great sword high spin attack.fbx"),
 
         ("Groggy",    "Assets/_Project/Animations/Boss/Groggy/Kneeling_Idle.fbx"),   // 체간 붕괴: 한쪽 무릎 꿇고 대기(반복)
+
+        // 후딜(간 보기): 플레이어를 바라본 채 옆·뒤로 걷기. 이동은 코드가 하므로 제자리(InPlace) 클립
+        ("StrafeL",   D + "OneHand_Up_Walk_L_InPlace.anim"),
+        ("StrafeR",   D + "OneHand_Up_Walk_R_InPlace.anim"),
+        ("StrafeB",   D + "OneHand_Up_Walk_B_InPlace.anim"),
+        ("StrafeF",   D + "OneHand_Up_Walk_F_InPlace.anim"),   // 후딜 중 거리 좁히기(천천히 걷기)
     };
 
     [MenuItem("Tools/Boss/Setup Pattern States")]

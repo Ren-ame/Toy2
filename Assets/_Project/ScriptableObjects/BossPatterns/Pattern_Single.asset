@@ -18,3 +18,5 @@ MonoBehaviour:
     Damage: 25
     TrackSpeed: 180
   _cooldown: 0
+  _recoveryMin: 1
+  _recoveryMax: 3
