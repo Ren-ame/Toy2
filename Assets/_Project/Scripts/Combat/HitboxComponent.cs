@@ -44,6 +44,13 @@ public class HitboxComponent : MonoBehaviour
                     stop = _isHeavyAttack ? 0.1f : 0.06f;
 
                 if (stop > 0f) HitStop.Instance.Play(stop);
+
+                float shake = 0f;
+                if (getDamage == DamageResult.Parried) shake = 1.2f;
+                else if (getDamage == DamageResult.Hit || getDamage == DamageResult.Killed)
+                    shake = _isHeavyAttack ? 1.0f : 0.5f;
+
+                if (shake > 0f) CameraShake.Instance.Play(shake);
             }
         }
     }
