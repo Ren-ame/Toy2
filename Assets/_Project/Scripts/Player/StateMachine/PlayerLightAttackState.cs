@@ -60,23 +60,18 @@ public class PlayerLightAttackState : PlayerState
             {
                 if (Machine.Stamina.CanConsume(PlayerHeavyAttackState.HeavyStaminaCost))
                 {
-                    Debug.Log("강공");
-                    Debug.Log("스태미나: " + Machine.Stamina.CurrentStamina);
                     Machine.ChangeState(new PlayerHeavyAttackState(Machine));
                     return;
                 }
                 else
                 {
-                    Debug.Log("Stamina Not Enough");
                     Machine.ChangeState(new PlayerIdleState(Machine));
                     return;
                 }
             }
             else
             {
-                Debug.Log("약공");
                 Machine.Stamina.TryConsume(LightStaminaCost);
-                Debug.Log("콤보: " + (_comboCount + 1) + " / 스태미나: " + Machine.Stamina.CurrentStamina);
             }
         }
 
@@ -88,7 +83,6 @@ public class PlayerLightAttackState : PlayerState
                 {
                     if (_hitboxState == HitboxState.Active)
                     {
-                        Debug.Log("Light Attack Hitbox Off");
                         Machine.Hitbox.Deactivate();
                     }
                     _comboCount += 1;
@@ -102,7 +96,6 @@ public class PlayerLightAttackState : PlayerState
                 }
                 else
                 {
-                    Debug.Log("Stamina Not Enough");
                     Machine.ChangeState(new PlayerIdleState(Machine));
                     return;
                 }
@@ -152,7 +145,6 @@ public class PlayerLightAttackState : PlayerState
         if (_elapsed >= InputBuffer)
         {
             _comboBuffer = true;
-            Debug.Log("예약됨");
         }
     }
 
@@ -162,7 +154,6 @@ public class PlayerLightAttackState : PlayerState
 
         if (_hitboxState == HitboxState.Active)
         {
-            Debug.Log("Hitbox Off");
             Machine.Hitbox.Deactivate();
         }
     }

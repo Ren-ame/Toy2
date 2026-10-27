@@ -107,7 +107,6 @@ public class BossStateMachine : MonoBehaviour
 
     private void HandlePoiseBroken()
     {
-        Debug.Log("체간 붕괴");
         ChangeState(new BossGroggyState(this));
     }
 

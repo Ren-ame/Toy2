@@ -71,7 +71,6 @@ public class PlayerHeavyAttackState : PlayerState
     {
         if (_hitboxState == HitboxState.Active)
         {
-            Debug.Log("Heavy Attack Hitbox Off");
             Machine.Hitbox.Deactivate();
         }
     }

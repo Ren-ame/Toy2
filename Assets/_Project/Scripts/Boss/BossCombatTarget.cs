@@ -27,11 +27,10 @@ public class BossCombatTarget : MonoBehaviour, IDamageable
         float damage = isCrit ? _critDamage : info.Damage;
 
         _health.Reduce(damage);
-        Debug.Log($"[Boss] -{damage} → HP {_health.CurrentHealth}");
         if (IsAlive) _poise.Add(info.PoiseDamage);
 
         if (isCrit && IsAlive)
-            _machine.ChangeState(new BossChaseState(_machine));
+            _machine.ChangeState(new BossRecoverState(_machine, 2f));
 
         DamageResult result = IsAlive ? DamageResult.Hit : DamageResult.Killed;
         _machine.OnDamaged(result);

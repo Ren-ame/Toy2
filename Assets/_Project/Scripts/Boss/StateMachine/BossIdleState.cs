@@ -10,7 +10,6 @@ public class BossIdleState : BossState
 
     public override void Enter()
     {
-        Debug.Log("[Boss] Idle");
         Machine.Animator.CrossFade("Idle", 0.15f);
     }
 

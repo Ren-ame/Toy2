@@ -14,7 +14,6 @@ public class BossStaggerState : BossState
     {
         _elapsed = 0f;
 
-        Debug.Log("경직됨");
         Machine.Animator.CrossFade("Stagger", 0.15f);
     }
 

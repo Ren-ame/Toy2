@@ -23,7 +23,6 @@ public class TrainingDummy : MonoBehaviour, IDamageable
         if (Time.time - _lastHitTimer >= _resetDelay)
         {
             _health.ResetHealth();
-            Debug.Log("[Dummy] HP 초기화");
         }
     }
 
@@ -34,7 +33,6 @@ public class TrainingDummy : MonoBehaviour, IDamageable
         if (!IsAlive) return DamageResult.Ignored;
 
         _health.Reduce(info.Damage);
-        Debug.Log($"[Dummy] -{info.Damage} → HP {_health.CurrentHealth}");
 
         return IsAlive ? DamageResult.Hit : DamageResult.Killed;
     }

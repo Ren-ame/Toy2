@@ -26,7 +26,6 @@ public class PlayerCombatTarget : MonoBehaviour, IDamageable
         if (_machine.IsInvulnerable) return DamageResult.Ignored;               // 회피
         if (_machine.IsParrying && IsFrontal(info) && info.IsParryable)         // 패리
         {
-            Debug.Log("패리됨");
             _machine.OnDamaged(DamageResult.Parried);
             return DamageResult.Parried;
         }
@@ -35,7 +34,6 @@ public class PlayerCombatTarget : MonoBehaviour, IDamageable
             if (_stamina.TryConsume(GuardStaminaCost) == true)
             {
                 _health.Reduce(info.Damage * GuardDamageRatio);
-                Debug.Log($"[Player] 가드 -{info.Damage * GuardDamageRatio} → HP {_health.CurrentHealth} / 스태미나 {_stamina.CurrentStamina}");
 
                 if (IsAlive == true)
                     return DamageResult.Blocked;
@@ -47,12 +45,11 @@ public class PlayerCombatTarget : MonoBehaviour, IDamageable
             }
             else
             {
-                Debug.Log("가드 브레이크");
+                // 가드 브레이크: 스태미나 부족 → 아래 일반 피격으로 진행
             }
         }
 
         _health.Reduce(info.Damage);
-        Debug.Log($"[Player] -{info.Damage} → HP {_health.CurrentHealth}");
 
         DamageResult result = IsAlive ? DamageResult.Hit : DamageResult.Killed;
         _machine.OnDamaged(result);

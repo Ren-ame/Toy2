@@ -8,7 +8,6 @@ public class BossDeadState : BossState
 
     public override void Enter()
     {
-        Debug.Log("[Boss] Dead");
         Machine.Animator.CrossFade("Dead", 0.15f);
     }
 }

@@ -16,7 +16,6 @@ public class PlayerGuardState : PlayerState
     {
         base.Enter();
         _elapsed = 0f;
-        Debug.Log("패링 창 열림");
         Machine.IsParrying = true;
 
         PlayAnimation("GuardMove");
@@ -30,7 +29,6 @@ public class PlayerGuardState : PlayerState
 
         if (_elapsed >= ParryWindow && _windowClosed == false)
         {
-            Debug.Log("가드");
             _windowClosed = true;
             Machine.IsParrying = false;
             Machine.IsGuarding = true;
