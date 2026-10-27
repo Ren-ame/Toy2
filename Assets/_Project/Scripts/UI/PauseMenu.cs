@@ -4,6 +4,8 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using Unity.Cinemachine;
 using TMPro;
+using UnityEngine.Audio;
+using System;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -27,6 +29,12 @@ public class PauseMenu : MonoBehaviour
     private float _sensX, _sensY;
     private bool _isOpen;
 
+    [SerializeField] private AudioMixer _mixer;
+    [SerializeField] private Slider _bgmSlider;
+    [SerializeField] private Slider _sfxSlider;
+    [SerializeField] private TMP_Text _bgmValueText;
+    [SerializeField] private TMP_Text _sfxValueText;
+
     void Start()
     {
         var controllers = _axisController.Controllers;
@@ -44,8 +52,20 @@ public class PauseMenu : MonoBehaviour
 
         ApplySensitivity();
 
+        float bgm = VolumeSettings.Load(VolumeSettings.BGMParam);
+        _bgmSlider.value = bgm;
+        _bgmValueText.text = bgm.ToString("0");
+
+        float sfx = VolumeSettings.Load(VolumeSettings.SFXParam);
+        _sfxSlider.value = sfx;
+        _sfxValueText.text = sfx.ToString("0");
+
+        VolumeSettings.ApplyAll(_mixer);
+
         _mouseXSlider.onValueChanged.AddListener(OnSensitivityXChanged);
         _mouseYSlider.onValueChanged.AddListener(OnSensitivityYChanged);
+        _bgmSlider.onValueChanged.AddListener(OnBgmChanged);
+        _sfxSlider.onValueChanged.AddListener(OnSfxChanged);
         _resumeButton.onClick.AddListener(Close);
         _titleButton.onClick.AddListener(ToTitle);
         _quitButton.onClick.AddListener(Quit);
@@ -96,6 +116,18 @@ public class PauseMenu : MonoBehaviour
         PlayerPrefs.SetFloat(KeyY, _sensY);
         _valueYText.text = _sensY.ToString("0.0");
         ApplySensitivity();
+    }
+
+    private void OnBgmChanged(float v)
+    {
+        VolumeSettings.Set(_mixer, VolumeSettings.BGMParam, v);
+        _bgmValueText.text = v.ToString("0");
+    }
+
+    private void OnSfxChanged(float v)
+    {
+        VolumeSettings.Set(_mixer, VolumeSettings.SFXParam, v);
+        _sfxValueText.text = v.ToString("0");
     }
 
     private void Open()
