@@ -7,8 +7,11 @@ using TMPro;
 
 public class PauseMenu : MonoBehaviour
 {
-    private const string KeyX = "MouseSensitivityX";
-    private const string KeyY = "MouseSensitivityY";
+    private const string KeyX = "MouseSensX10";
+    private const string KeyY = "MouseSensY10";
+
+    private const float DefaultSensitivity = 5f;
+    private const float BaseSensitivity = 5f;
 
     [SerializeField] private CanvasGroup _group;
     [SerializeField] private Slider _mouseXSlider;
@@ -31,12 +34,12 @@ public class PauseMenu : MonoBehaviour
         for (int i = 0; i < controllers.Count; i++)
             _baseGains[i] = controllers[i].Input.Gain;
 
-        _sensX = PlayerPrefs.GetFloat(KeyX, 1f);
-        _sensY = PlayerPrefs.GetFloat(KeyY, 1f);
+        _sensX = PlayerPrefs.GetFloat(KeyX, DefaultSensitivity);
+        _sensY = PlayerPrefs.GetFloat(KeyY, DefaultSensitivity);
 
-        _mouseXSlider.value = _sensX;
+        _mouseXSlider.value = _sensX * 10f;
         _valueXText.text = _sensX.ToString("0.0"); 
-        _mouseYSlider.value = _sensY;
+        _mouseYSlider.value = _sensY * 10f;
         _valueYText.text = _sensY.ToString("0.0");
 
         ApplySensitivity();
@@ -71,9 +74,9 @@ public class PauseMenu : MonoBehaviour
             float multiplier = 1f;
 
             if (controllers[i].Name == "Look Orbit X")
-                multiplier = _sensX;
+                multiplier = _sensX / BaseSensitivity;
             else if (controllers[i].Name == "Look Orbit Y")
-                multiplier = _sensY;
+                multiplier = _sensY / BaseSensitivity;
 
             controllers[i].Input.Gain = _baseGains[i] * multiplier;
         }
@@ -81,16 +84,16 @@ public class PauseMenu : MonoBehaviour
 
     private void OnSensitivityXChanged(float v)
     {
-        _sensX = v;
-        PlayerPrefs.SetFloat(KeyX, v);
+        _sensX = v / 10f;
+        PlayerPrefs.SetFloat(KeyX, _sensX);
         _valueXText.text = _sensX.ToString("0.0");
         ApplySensitivity();
     }
 
     private void OnSensitivityYChanged(float v)
     {
-        _sensY = v;
-        PlayerPrefs.SetFloat(KeyY, v);
+        _sensY = v / 10f;
+        PlayerPrefs.SetFloat(KeyY, _sensY);
         _valueYText.text = _sensY.ToString("0.0");
         ApplySensitivity();
     }
