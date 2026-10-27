@@ -55,3 +55,7 @@ sysinfo.txt
 
 *.rar
 *.zip
+
+# 빌드할 때 Performance Testing 패키지가 임시로 만드는 파일 (빌드 후 자동 삭제)
+/[Aa]ssets/Resources/PerformanceTestRun*
+/[Aa]ssets/Resources.meta

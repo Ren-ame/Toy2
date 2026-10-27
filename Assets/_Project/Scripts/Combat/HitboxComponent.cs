@@ -7,12 +7,16 @@ public class HitboxComponent : MonoBehaviour
     private Collider _collider;
 
     private float _damage;
+    private float _poiseDamage;
+    private bool _isParryable;
+    private bool _isHeavyAttack;
 
     private HashSet<IDamageable> _hitList = new HashSet<IDamageable>();
 
     public event Action<DamageResult> OnHitResult;
 
     private GameObject _owner;
+
 
     private void Awake()
     {
@@ -23,8 +27,6 @@ public class HitboxComponent : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.gameObject.name);
-
         if (other.transform.root.gameObject == _owner) return;
 
         if (other.gameObject.TryGetComponent<IDamageable>(out IDamageable target))
@@ -32,18 +34,21 @@ public class HitboxComponent : MonoBehaviour
             if (_hitList.Contains(target) == false)
             {
                 _hitList.Add(target); 
-                DamageInfo damageInfo = new DamageInfo(_damage, 0, false, Vector3.zero, Vector3.zero, _owner);
+                DamageInfo damageInfo = new DamageInfo(_damage, _poiseDamage, _isParryable, _isHeavyAttack, Vector3.zero, Vector3.zero, _owner);
                 DamageResult getDamage = target.TakeDamage(damageInfo);
                 OnHitResult?.Invoke(getDamage);
             }
         }
     }
 
-    public void Activate(float damage)
+    public void Activate(float damage, bool isParryable = true, float poiseDamage = 0f, bool isHeavyAttack = false)
     {
         _hitList.Clear();
         _collider.enabled = true;
         _damage = damage;
+        _poiseDamage = poiseDamage;
+        _isParryable = isParryable;
+        _isHeavyAttack = isHeavyAttack;
     }
 
     public void Deactivate()

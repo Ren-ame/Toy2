@@ -11,7 +11,8 @@ public class PlayerHeavyAttackState : PlayerState
 
     public const float HeavyStaminaCost = 30f;
 
-    private const float Damage = 30f;
+    private const float DamageRatio = 3f;
+    private const float PoiseRatio = 1f;
 
     private const int HeavyEventIndex = 3;
 
@@ -46,7 +47,8 @@ public class PlayerHeavyAttackState : PlayerState
             case "HitboxOn":
                 if (_hitboxState == HitboxState.Waiting)
                 {
-                    Machine.Hitbox.Activate(Damage);
+                    float damage = Machine.Atk * DamageRatio;
+                    Machine.Hitbox.Activate(damage, true, damage * PoiseRatio, true);
                     _hitboxState = HitboxState.Active;
                 }
                 break;

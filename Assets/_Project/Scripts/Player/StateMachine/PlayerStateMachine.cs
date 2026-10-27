@@ -17,6 +17,9 @@ public class PlayerStateMachine : MonoBehaviour
     public bool IsParrying { get; set; }
     public bool IsGuarding { get; set; }
 
+    [SerializeField] private float _atk = 10f;
+    public float Atk => _atk;
+
     private void Awake()
     {
         Input = GetComponent<PlayerInputReader>();

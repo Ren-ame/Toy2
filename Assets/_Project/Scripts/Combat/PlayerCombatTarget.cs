@@ -22,15 +22,15 @@ public class PlayerCombatTarget : MonoBehaviour, IDamageable
 
     public DamageResult TakeDamage(in DamageInfo info)
     {
-        if (!IsAlive) return DamageResult.Ignored;                  // 죽음
-        if (_machine.IsInvulnerable) return DamageResult.Ignored;   // 회피
-        if (_machine.IsParrying && IsFrontal(info))                 // 패리
+        if (!IsAlive) return DamageResult.Ignored;                              // 죽음
+        if (_machine.IsInvulnerable) return DamageResult.Ignored;               // 회피
+        if (_machine.IsParrying && IsFrontal(info) && info.IsParryable)         // 패리
         {
             Debug.Log("패리됨");
             _machine.OnDamaged(DamageResult.Parried);
             return DamageResult.Parried;
         }
-        if (_machine.IsGuarding && IsFrontal(info))                 // 가드
+        if ((_machine.IsGuarding || _machine.IsParrying) && IsFrontal(info))    // 가드
         {
             if (_stamina.TryConsume(GuardStaminaCost) == true)
             {

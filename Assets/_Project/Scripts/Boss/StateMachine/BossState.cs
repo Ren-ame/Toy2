@@ -13,5 +13,5 @@ public abstract class BossState
     public virtual void Tick(float deltaTime) { }
     public virtual void Exit() { }
 
-    public virtual void OnAnimationEvent(string eventName) { }
+    public virtual void OnAnimationEvent(string eventName, int index) { }
 }

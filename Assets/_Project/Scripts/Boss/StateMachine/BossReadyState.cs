@@ -25,7 +25,7 @@ public class BossReadyState : BossState
 
         if (_elapsed >= ReadyTime)
         {
-            Machine.ChangeState(new BossAttackState(Machine));
+            Machine.ChangeState(new BossComboState(Machine, Machine.PickPattern()));
         }
     }
 }
