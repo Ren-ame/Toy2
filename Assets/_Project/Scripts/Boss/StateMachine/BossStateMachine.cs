@@ -35,6 +35,8 @@ public class BossStateMachine : MonoBehaviour
 
     [SerializeField] private float _parryPoiseDamage = 30f;
 
+    [SerializeField] private TrailRenderer _swordTrail;
+
     private void Awake()
     {
         Target = GameObject.FindWithTag("Player").transform;
@@ -141,5 +143,10 @@ public class BossStateMachine : MonoBehaviour
         int pick = candidates[Random.Range(0, candidates.Count)];
         _readyTime[pick] = Time.time + _patterns[pick].Cooldown;
         return _patterns[pick];
+    }
+
+    public void SetSwordTrail(bool on)
+    {
+        _swordTrail.emitting = on;
     }
 }

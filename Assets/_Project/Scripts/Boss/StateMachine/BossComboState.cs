@@ -59,11 +59,13 @@ public class BossComboState : BossState
             
             case "SwordHitboxOn":
                 Machine.SetEyeGlow(false);
+                Machine.SetSwordTrail(true);
                 Machine.SwordHitbox.Activate(CurrentSegment.Damage, _nextParryable);
                 _hitboxState = HitboxState.Active;
                 break;
 
             case "SwordHitboxOff":
+                Machine.SetSwordTrail(false);
                 Machine.SwordHitbox.Deactivate();
                 _hitboxState = HitboxState.Finished;
                 break;
@@ -97,5 +99,6 @@ public class BossComboState : BossState
         }
 
         Machine.SetEyeGlow(false);
+        Machine.SetSwordTrail(false);
     }
 }
