@@ -5907,6 +5907,7 @@ GameObject:
   - component: {fileID: 164997347}
   - component: {fileID: 164997346}
   - component: {fileID: 164997348}
+  - component: {fileID: 164997349}
   m_Layer: 0
   m_Name: Systems
   m_TagString: Untagged
@@ -5959,6 +5960,18 @@ MonoBehaviour:
   _winText: {fileID: 231721200}
   _loseText: {fileID: 654785486}
   _fadeSpeed: 1
+--- !u!114 &164997349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 164997345}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c421c5fa6f24dbe47a293609455ca247, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitStop
 --- !u!4 &165184852 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 405216939484306448, guid: 16c89684cc110f94fa0d913f5ac4611d, type: 3}

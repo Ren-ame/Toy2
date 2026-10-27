@@ -37,6 +37,13 @@ public class HitboxComponent : MonoBehaviour
                 DamageInfo damageInfo = new DamageInfo(_damage, _poiseDamage, _isParryable, _isHeavyAttack, Vector3.zero, Vector3.zero, _owner);
                 DamageResult getDamage = target.TakeDamage(damageInfo);
                 OnHitResult?.Invoke(getDamage);
+
+                float stop = 0f;
+                if (getDamage == DamageResult.Parried) stop = 0.12f;
+                else if (getDamage == DamageResult.Hit || getDamage == DamageResult.Killed)
+                    stop = _isHeavyAttack ? 0.1f : 0.06f;
+
+                if (stop > 0f) HitStop.Instance.Play(stop);
             }
         }
     }
