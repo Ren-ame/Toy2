@@ -14,9 +14,9 @@ public class HitboxComponent : MonoBehaviour
     private HashSet<IDamageable> _hitList = new HashSet<IDamageable>();
 
     public event Action<DamageResult> OnHitResult;
+    public event Action OnActivated;
 
     private GameObject _owner;
-
 
     private void Awake()
     {
@@ -38,15 +38,20 @@ public class HitboxComponent : MonoBehaviour
                 DamageResult getDamage = target.TakeDamage(damageInfo);
                 OnHitResult?.Invoke(getDamage);
 
+                float scale = 0f;
                 float stop = 0f;
-                if (getDamage == DamageResult.Parried) stop = 0.12f;
+                if (getDamage == DamageResult.Parried)
+                {
+                    stop = 0.15f;
+                    scale = 0.1f;
+                }
                 else if (getDamage == DamageResult.Hit || getDamage == DamageResult.Killed)
                     stop = _isHeavyAttack ? 0.1f : 0.06f;
 
-                if (stop > 0f) HitStop.Instance.Play(stop);
+                if (stop > 0f) HitStop.Instance.Play(stop, scale);
 
                 float shake = 0f;
-                if (getDamage == DamageResult.Parried) shake = 1.2f;
+                if (getDamage == DamageResult.Parried) shake = 0.8f;
                 else if (getDamage == DamageResult.Hit || getDamage == DamageResult.Killed)
                     shake = _isHeavyAttack ? 1.0f : 0.5f;
 
@@ -63,6 +68,7 @@ public class HitboxComponent : MonoBehaviour
         _poiseDamage = poiseDamage;
         _isParryable = isParryable;
         _isHeavyAttack = isHeavyAttack;
+        OnActivated?.Invoke();
     }
 
     public void Deactivate()

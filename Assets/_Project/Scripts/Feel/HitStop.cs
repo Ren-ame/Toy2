@@ -12,16 +12,16 @@ public class HitStop : MonoBehaviour
         Instance = this;
     }
 
-    public void Play(float duration)
+    public void Play(float duration, float scale = 0f)
     {
         if (_routine != null) StopCoroutine(_routine);
-        _routine = StartCoroutine(StopRoutine(duration));
+        _routine = StartCoroutine(StopRoutine(duration, scale));
     }
 
-    private IEnumerator StopRoutine(float duration)
+    private IEnumerator StopRoutine(float duration, float scale)
     {
-        Time.timeScale = 0f;
+        Time.timeScale = scale;
         yield return new WaitForSecondsRealtime(duration);
-        Time.timeScale = 1f;
+        if (Time.timeScale == scale) Time.timeScale = 1f;
     }
 }
