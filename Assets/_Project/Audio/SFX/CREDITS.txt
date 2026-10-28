@@ -1,0 +1,16 @@
+SFX_Swing_01~10  ← "sword" (StarNinjas, OpenGameArt) — CC0
+SFX_Clash_01~10  ← "sword clash" (StarNinjas, OpenGameArt) — CC0
+https://opengameart.org/content/20-sword-sound-effects-attacks-and-clashes
+가공: 앞쪽 무음 제거(소리 시작 5ms 전부터), 3ms 페이드 인, Vorbis q6 재인코딩
+작성자 요청: 크레딧에 StarNinjas 표기
+
+Whoosh/SFX_WhooshLight_01~04, SFX_WhooshHeavy_01~04  ← "Sword slash swoosh" (Mixkit, mixkit.co) — Mixkit Sound Effects Free License, 크레딧 불필요
+Impact/SFX_HitFlesh_01~03  ← "Quick saber cut" (Mixkit)
+Impact/SFX_HitArmor_03~04  ← "Metal hit woosh" (Mixkit)
+Impact/SFX_HitArmor_01~02  ← "Armor impact from sword" (Dragon Studio, Pixabay) — Pixabay Content License, 크레딧 불필요
+가공: 모노, 앞쪽 무음 제거, 피치 변형으로 바리에이션, 음량 정규화(휘두름 -25/-23.5, 적중 -21 LUFS)
+Result/SFX_Result_Victory  ← "Church Bell" (freesound_community, Pixabay) — Pixabay Content License, 크레딧 불필요 (2.1s~10.6s 구간, 종 3번)
+Result/SFX_Result_Defeat   ← "Boom - Geomorphism Cinematic Trailer" (Submority, Pixabay) — Pixabay Content License, 크레딧 불필요 (앞 9s)
+Intro/SFX_Intro_Reveal ← "Biodynamic Impact Braam - Tonal Dark" (BryanSantosBreton, Pixabay) — Pixabay Content License, 크레딧 불필요 (0.45s~7.45s, 끝 2s 페이드)
+Parry/SFX_Parry_01~03 ← SFX_Clash_02·05·10(StarNinjas, 피치 0.92) + Armor impact(Dragon Studio) + Boom 앞 0.6s 저역(Submority) 레이어, -18 LUFS
+Swing/ 폴더는 금속성 소리라 현재 미사용

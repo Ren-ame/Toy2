@@ -10,7 +10,10 @@ public class GameFlowController : MonoBehaviour
     [SerializeField] private GameObject _winText;
     [SerializeField] private GameObject _loseText;
     [SerializeField] private float _fadeSpeed = 1f;
-
+    [SerializeField] private AudioClip _winSfx;
+    [SerializeField] private AudioClip _loseSfx;
+    [SerializeField] private AudioSource _bgm;
+    [SerializeField] private float _bgmFadeSpeed = 0.4f;
 
     private bool _isOver;
 
@@ -28,21 +31,22 @@ public class GameFlowController : MonoBehaviour
 
     private void HandlePlayerDied()
     {
-        ShowResult(_loseText);
+        ShowResult(_loseText, _loseSfx);
     }
 
     private void HandleBossDied()
     {
-        ShowResult(_winText);
+        ShowResult(_winText, _winSfx);
     }
 
-    private void ShowResult(GameObject text)
+    private void ShowResult(GameObject text, AudioClip sfx)
     {
         if (_isOver == true)
             return;
         _isOver = true;
         _resultGroup.gameObject.SetActive(true);
         text.SetActive(true);
+        SfxPlayer.Instance?.Play(new[] { sfx });
     }
 
     private void Update()
@@ -50,6 +54,8 @@ public class GameFlowController : MonoBehaviour
         if (_isOver == true)
         {
             _resultGroup.alpha = Mathf.MoveTowards(_resultGroup.alpha, 1, _fadeSpeed * Time.deltaTime);
+            if (_bgm != null)
+                _bgm.volume = Mathf.MoveTowards(_bgm.volume, 0, _bgmFadeSpeed * Time.deltaTime);
         }
 
         if (_isOver == true && Keyboard.current.rKey.wasPressedThisFrame && _resultGroup.alpha >= 1f)
