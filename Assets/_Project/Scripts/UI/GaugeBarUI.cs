@@ -11,6 +11,12 @@ public class GaugeBarUI : MonoBehaviour
     [SerializeField] private float _baseMax = 100f;
     [SerializeField] private RectTransform _bar;
 
+    [SerializeField] private Image _trail;
+    [SerializeField] private float _trailDelay = 0.5f;
+    [SerializeField] private float _trailSpeed = 0.8f;
+
+    private float _trailTimer;
+
     private float _baseWidth;
 
     private IGauge _gauge;
@@ -36,18 +42,34 @@ public class GaugeBarUI : MonoBehaviour
     {
         _targetRatio = _gauge.Ratio;
         _fill.fillAmount = _gauge.Ratio;
+        if (_trail != null) _trail.fillAmount = _gauge.Ratio;
         ApplyWidth(_gauge.Max);
     }
 
     private void Update()
     {
         _fill.fillAmount = Mathf.MoveTowards(_fill.fillAmount, _targetRatio, _smoothSpeed * Time.deltaTime);
+
+        if (_trail == null) return;
+
+        if (_trailTimer > 0f)
+        {
+            _trailTimer -= Time.deltaTime;
+            return;
+        }
+
+        _trail.fillAmount = Mathf.MoveTowards(_trail.fillAmount, _fill.fillAmount, _trailSpeed * Time.deltaTime);
+
+        if (_trail.fillAmount < _fill.fillAmount) _trail.fillAmount = _fill.fillAmount;
     }
 
     private void UpdateBar(float current, float max)
     {
         ApplyWidth(max);
-        _targetRatio = current / max;
+
+        float newRatio = current / max;
+        if (newRatio < _targetRatio) _trailTimer = _trailDelay;
+        _targetRatio = newRatio;
     }
 
     private void ApplyWidth(float max)
