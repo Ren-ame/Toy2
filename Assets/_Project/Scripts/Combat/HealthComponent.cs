@@ -7,6 +7,7 @@ public class HealthComponent : MonoBehaviour, IGauge
     public float CurrentHealth { get; private set; }
     public float MaxHealth => _maxHealth;
     public float Ratio => CurrentHealth / MaxHealth;
+    public float Max => _maxHealth;
     public bool IsDead => CurrentHealth <= 0f;
 
     public event Action<float, float> OnChanged;

@@ -9,6 +9,7 @@ public class StaminaComponent : MonoBehaviour, IGauge
 
     public float CurrentStamina { get; private set; }
     public float MaxStamina => _maxStamina;
+    public float Max => _maxStamina;
     public float Ratio => CurrentStamina / MaxStamina;
 
     public event Action<float, float> OnChanged;

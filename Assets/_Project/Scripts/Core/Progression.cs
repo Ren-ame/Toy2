@@ -9,13 +9,13 @@ public static class Progression
     private const string StRegenLevelKey = "StRegenLevel";
 
     private const float BaseAtk = 10f;
-    private const float AtkPerLevel = 1f;
+    public const float AtkPerLevel = 1f;
     private const float BaseHp = 100f;
-    private const float HpPerLevel = 10f;
+    public const float HpPerLevel = 10f;
     private const float BaseStamina = 100f;
-    private const float StaminaPerLevel = 10f;
+    public const float StaminaPerLevel = 10f;
     private const float BaseStRegen = 35f;
-    private const float StRegenPerLevel = 3.5f;
+    public const float StRegenPerLevel = 3.5f;
 
     private const int BaseCost = 100;
     private const int CostStep = 50;

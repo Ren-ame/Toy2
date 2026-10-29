@@ -18,8 +18,8 @@ public class PlayerCombatTarget : MonoBehaviour, IDamageable
         _health = GetComponent<HealthComponent>();
         _stamina = GetComponent<StaminaComponent>();
         _machine = GetComponent<PlayerStateMachine>();
-        _health.SetMaxHealth(Progression.MaxHp);
-        _stamina.SetStats(Progression.MaxStamina, Progression.StaminaRegen);
+
+        ApplyProgression();
     }
 
     public DamageResult TakeDamage(in DamageInfo info)
@@ -68,5 +68,11 @@ public class PlayerCombatTarget : MonoBehaviour, IDamageable
 
         bool isInGuardRange = Vector3.Angle(transform.forward, dir) <= GuardAngle * 0.5f;
         return isInGuardRange;
+    }
+
+    public void ApplyProgression()
+    {
+        _health.SetMaxHealth(Progression.MaxHp);
+        _stamina.SetStats(Progression.MaxStamina, Progression.StaminaRegen);
     }
 }

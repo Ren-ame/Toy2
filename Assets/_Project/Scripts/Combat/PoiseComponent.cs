@@ -6,6 +6,7 @@ public class PoiseComponent : MonoBehaviour, IGauge
     [SerializeField] private  float _maxPoise = 100f;
     public float CurrentPoise { get; private set; }
     public float MaxPoise => _maxPoise;
+    public float Max => _maxPoise;
     public float Ratio => CurrentPoise / MaxPoise;
     public bool IsBroken => _hasBroken;
 

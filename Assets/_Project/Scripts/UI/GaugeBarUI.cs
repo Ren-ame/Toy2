@@ -6,6 +6,12 @@ public class GaugeBarUI : MonoBehaviour
     [SerializeField] private MonoBehaviour _source;
     [SerializeField] private Image _fill;
     [SerializeField] private float _smoothSpeed = 0.3f;
+    
+    [SerializeField] private bool _growWithMax;
+    [SerializeField] private float _baseMax = 100f;
+    [SerializeField] private RectTransform _bar;
+
+    private float _baseWidth;
 
     private IGauge _gauge;
     private float _targetRatio;
@@ -13,6 +19,7 @@ public class GaugeBarUI : MonoBehaviour
     private void Awake()
     {
         _gauge = _source as IGauge;
+        if (_growWithMax) _baseWidth = _bar.sizeDelta.x;
     }
 
     private void OnEnable()
@@ -29,6 +36,7 @@ public class GaugeBarUI : MonoBehaviour
     {
         _targetRatio = _gauge.Ratio;
         _fill.fillAmount = _gauge.Ratio;
+        ApplyWidth(_gauge.Max);
     }
 
     private void Update()
@@ -38,7 +46,17 @@ public class GaugeBarUI : MonoBehaviour
 
     private void UpdateBar(float current, float max)
     {
+        ApplyWidth(max);
         _targetRatio = current / max;
+    }
+
+    private void ApplyWidth(float max)
+    {
+        if (!_growWithMax)
+            return;
+
+        float width = _baseWidth * max / _baseMax;
+        _bar.sizeDelta = new Vector2(width, _bar.sizeDelta.y);
     }
 }
 

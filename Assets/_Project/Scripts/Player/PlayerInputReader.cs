@@ -15,6 +15,7 @@ public class PlayerInputReader : MonoBehaviour
     public event Action OnParryPressed;
     public event Action OnLockOnPressed;
     public event Action OnHealPressed;
+    public event Action OnInteractPressed;
 
     private void Awake()
     {
@@ -30,6 +31,7 @@ public class PlayerInputReader : MonoBehaviour
         _controls.Gameplay.Parry.performed += _ => OnParryPressed?.Invoke();
         _controls.Gameplay.LockOn.performed += _ => OnLockOnPressed?.Invoke();
         _controls.Gameplay.Heal.performed += _ => OnHealPressed?.Invoke();
+        _controls.Gameplay.Interact.performed += _ => OnInteractPressed?.Invoke();
     }
 
     private void OnEnable()
@@ -45,5 +47,11 @@ public class PlayerInputReader : MonoBehaviour
     private void OnDestroy()
     {
         _controls.Dispose();
+    }
+
+    public void SetGameplayEnabled(bool enabled)
+    {
+        if (enabled) _controls.Gameplay.Enable();
+        else _controls.Gameplay.Disable();
     }
 }
