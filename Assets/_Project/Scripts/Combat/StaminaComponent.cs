@@ -57,4 +57,12 @@ public class StaminaComponent : MonoBehaviour, IGauge
         if (CurrentStamina < amount) return false;
         return true;
     }
+
+    public void SetStats(float max, float regenPerSecond)
+    {
+        _maxStamina = max;
+        _regenPerSecond = regenPerSecond;
+        CurrentStamina = max;
+        OnChanged?.Invoke(CurrentStamina, MaxStamina);
+    }
 }

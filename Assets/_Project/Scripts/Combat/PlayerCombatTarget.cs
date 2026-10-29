@@ -18,6 +18,8 @@ public class PlayerCombatTarget : MonoBehaviour, IDamageable
         _health = GetComponent<HealthComponent>();
         _stamina = GetComponent<StaminaComponent>();
         _machine = GetComponent<PlayerStateMachine>();
+        _health.SetMaxHealth(Progression.MaxHp);
+        _stamina.SetStats(Progression.MaxStamina, Progression.StaminaRegen);
     }
 
     public DamageResult TakeDamage(in DamageInfo info)

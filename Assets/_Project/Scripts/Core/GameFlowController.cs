@@ -32,11 +32,13 @@ public class GameFlowController : MonoBehaviour
     private void HandlePlayerDied()
     {
         ShowResult(_loseText, _loseSfx);
+        PlayerPrefs.Save();
     }
 
     private void HandleBossDied()
     {
         ShowResult(_winText, _winSfx);
+        PlayerPrefs.Save();
     }
 
     private void ShowResult(GameObject text, AudioClip sfx)

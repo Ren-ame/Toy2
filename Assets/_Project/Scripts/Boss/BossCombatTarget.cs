@@ -10,7 +10,7 @@ public class BossCombatTarget : MonoBehaviour, IDamageable
     public bool IsAlive => !_health.IsDead;
     public bool IsBroken => _poise.IsBroken;
 
-    [SerializeField] private float _critDamage = 250f;
+    [SerializeField] private float _critMultiplier = 5f;
 
     private void Awake()
     {
@@ -24,9 +24,13 @@ public class BossCombatTarget : MonoBehaviour, IDamageable
         if (!IsAlive) return DamageResult.Ignored;
 
         bool isCrit = _machine.IsGroggy && info.IsHeavyAttack;
-        float damage = isCrit ? _critDamage : info.Damage;
+        float damage = isCrit ? info.Damage * _critMultiplier : info.Damage;
 
+        float before = _health.CurrentHealth;
         _health.Reduce(damage);
+        float dealt = before - _health.CurrentHealth;
+        Progression.AddCurrency(Mathf.RoundToInt(dealt));
+
         if (IsAlive) _poise.Add(info.PoiseDamage);
 
         if (isCrit && IsAlive)

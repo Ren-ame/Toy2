@@ -47,4 +47,11 @@ public class HealthComponent : MonoBehaviour, IGauge
         CurrentHealth = _maxHealth;
         OnChanged?.Invoke(CurrentHealth, MaxHealth);
     }
+
+    public void SetMaxHealth(float max)
+    {
+        _maxHealth = max;
+        CurrentHealth = max;
+        OnChanged?.Invoke(CurrentHealth, MaxHealth);
+    }
 }
