@@ -173,6 +173,7 @@ Assets/_Project/
 | 플레이어 모델 | Medieval Knight Sculpture (Game Ready) |
 | 플레이어 무기 | The Majestic Sword of Golden Blood (Game Ready) |
 | 보스 모델 | Knight with Sword (Unity Asset Store) |
+| 상인 모델 | Medieval Civilian 3 — Leonardo Carvalho (Sketchfab, Free Standard) |
 | 플레이어 애니메이션 | Mixamo Pro Sword and Shield Pack, Free Sword Animations (EEJANAI Team) |
 | 보스 애니메이션 | RPG Animations Pack FREE (DoubleL), Great Sword Pack, Mixamo |
 | 배경 | Realistic Tree, 성문(HolyGate) — Blender로 직접 제작 |

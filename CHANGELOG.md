@@ -2,6 +2,27 @@
 
 빌드 버전별 변경 기록. 날짜는 한국 시간 기준 빌드 시각. 플레이어용 요약은 빌드 폴더의 `패치노트.txt` 참고.
 
+## [0.1.7] — 2026-10-29
+
+### 추가
+- **상인 NPC** — 시작 지점 뒤(Medieval Civilian 3, Mixamo 리그). 2.5m 트리거 안에서 `[F] 대화` → 강화 창, 말하는 동안 Talk 애니메이션 + 플레이어 쪽으로 돌아봄(unscaled), 닫으면 Idle `0cc0452` `5f80eeb`
+  - 입력 `Interact`(F) 추가, 창이 열린 동안 Gameplay 입력 차단(`PlayerInputReader.SetGameplayEnabled`)
+  - 에디터 툴 `Tools/Models/Setup Merchant`(0.01배 크기 보정, Humanoid, URP Lit Specular 머티리얼), `Tools/UI/Add Interact Prompt`, `Tools/UI/Build Upgrade Menu`
+- **강화 시스템** `Progression`(static, PlayerPrefs) `390447c`
+  - 재화 = 보스에게 실제로 깎은 HP, 패배해도 유지(승리·패배 시 저장)
+  - 강화 4종: 공격력 +1 / 체력 +10 / 최대 스태미나 +10 / 스태미나 회복 +3.5 (초당), 비용 100 + 레벨×50, 최대 10레벨
+  - 상인 창 **초기화(환불)** — 쓴 재화 전액 반환 / 타이틀 **기록 초기화** — 레벨·재화 0, 확인 창 거침(감도·볼륨은 유지) `c0464b0`
+  - 강화 즉시 반영: `PlayerCombatTarget.ApplyProgression`(최대 체력·스태미나), 공격력은 `Progression.Atk`를 바로 읽음
+- **최대치에 따라 길어지는 HP·스태미나 바** — `IGauge.Max`, `GaugeBarUI._growWithMax`(플레이어 바만) `5f80eeb`
+- **패링 슬로모션** — 0.12초 정지 → 0.15초 0.1배속, 셰이크 1.2 → 0.8 (`HitStop.Play(duration, scale)`) `ce39027`
+
+### 변경
+- 치명타: 고정 250 → **강공 대미지 × 5** (기본 150 = 보스 HP 30%, 공격력 강화에 비례) `390447c`
+- 강화 창은 Esc를 `LateUpdate`에서 처리 — 같은 프레임에 일시정지 메뉴가 열리던 충돌 방지
+
+### 제거
+- 합성 타격음 `SFX_Impact_01~05`, `ControlsScreen`(IntroSequence로 통합) `1e60dad`
+
 ## [0.1.6] — 2026-10-28
 
 ### 변경
