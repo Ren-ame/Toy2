@@ -37,6 +37,8 @@ public class BossStateMachine : MonoBehaviour
 
     [SerializeField] private TrailRenderer _swordTrail;
 
+    public event System.Action OnPlayerDetected;
+
     private void Awake()
     {
         Target = GameObject.FindWithTag("Player").transform;
@@ -149,4 +151,6 @@ public class BossStateMachine : MonoBehaviour
     {
         _swordTrail.emitting = on;
     }
+
+    public void NotifyPlayerDetected() => OnPlayerDetected?.Invoke();
 }

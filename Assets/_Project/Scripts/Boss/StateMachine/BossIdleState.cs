@@ -21,6 +21,7 @@ public class BossIdleState : BossState
 
         if (dir.sqrMagnitude <= DetectRange * DetectRange)
         {
+            Machine.NotifyPlayerDetected();
             Machine.ChangeState(new BossChaseState(Machine));
         }
     }
